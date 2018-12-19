@@ -1,8 +1,9 @@
 #ARG BASE_IMAGE=node:8
-#ARG BASE_IMAGE=arm32v7/node
-ARG BASE_IMAGE=hypriot/rpi-node
+ARG BASE_IMAGE=arm32v7/node
 
 FROM ${BASE_IMAGE}
+
+COPY ./qemu-arm-static /usr/bin/qemu-arm-static
 
 # Create app directory
 WORKDIR /usr/src/app
