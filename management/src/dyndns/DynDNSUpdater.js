@@ -24,21 +24,25 @@ class DynDNSUpdater {
     };
     SimpleParamCheck.checkForFalsy(this.config);
 
+    this._state = {
+      previousExternalIP: null,
+      error: null
+    };
     this._previousExternalIP = null;
     this._cron = null;
+    this._retry = false;
   }
 
   updateOnce() {
     getIP()
       .then(EXTERNALIP => {
-        if (this._previousExternalIP === EXTERNALIP) {
+        if (this._state.previousExternalIP === EXTERNALIP) {
           console.log(
             `The external IP ${EXTERNALIP} hasn't changed; nothing to do`
           );
           return;
         }
 
-        this._previousExternalIP = EXTERNALIP;
         console.log(`The external IP is now ${EXTERNALIP}`);
 
         var base64Credentials = Buffer.from(
@@ -60,13 +64,24 @@ class DynDNSUpdater {
             }
           },
           function(err, res) {
-            if (err) throw err;
+            if (err) {
+              this._state = {
+                previousExternalIP: null,
+                error: err
+              };
+              throw err;
+            }
 
             res.setTimeout(10000);
 
             res.on("data", function(chunk) {
               // TODO: evaluation of chunk's content
+              // API like https://www.npmjs.com/package/ddns-updater or https://www.npmjs.com/package/node-dyndns-client
               console.log("DynDNS server responded with: " + chunk);
+              this._state = {
+                previousExternalIP: EXTERNALIP,
+                error: null
+              };
             });
           }
         );
@@ -95,8 +110,10 @@ class DynDNSUpdater {
         scheduled: false
       }
     );
-    console.log(`Starting cyclic update every ${minutes} minutes`);
+    // Run first update immediately
+    this.updateOnce();
     this._cron.start();
+    console.log(`Started cyclic update every ${minutes} minutes`);
   }
 
   stopCyclicUpdate() {
