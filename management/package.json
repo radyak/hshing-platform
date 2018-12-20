@@ -13,6 +13,7 @@
   "author": "florian.vogel84@gmx.net",
   "license": "ISC",
   "dependencies": {
+    "deepmerge": "^3.0.0",
     "external-ip": "^2.1.1",
     "node-cron": "^2.0.3",
     "simple-get": "^3.0.3"

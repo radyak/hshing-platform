@@ -1,4 +1,5 @@
 var fs = require("fs");
+var deepmerge = require("deepmerge");
 
 function ConfigService(customConfig) {
   var config = Object.assign(
@@ -8,27 +9,43 @@ function ConfigService(customConfig) {
     customConfig
   );
 
-  this.getConfig = function() {
+  var read = function() {
     var promise = new Promise((resolve, reject) => {
-      var readStream = fs.createReadStream(config.file);
-      readStream.on("error", err => {
-        reject(err);
-      });
-      readStream.on("data", chunk => {
-        var data = chunk.toString("utf8");
-        try {
-          var config = JSON.parse(data);
-          resolve(config);
-        } catch (e) {
-          reject(e);
+      fs.readFile(config.file, (err, content) => {
+        if (err) {
+          reject(err);
+          return;
         }
+        resolve(content);
       });
     });
     return promise;
   };
 
+  var write = function(content) {
+    var promise = new Promise((resolve, reject) => {
+      fs.writeFile(config.file, content, err => {
+        if (err) {
+          reject(e);
+          return;
+        }
+        resolve();
+      });
+    });
+    return promise;
+  };
+
+  this.getConfig = function() {
+    return read().then(configString => {
+      return JSON.parse(configString);
+    });
+  };
+
   this.addConfig = function(subConfig) {
-    this.getConfig().then(config => {});
+    return this.getConfig().then(config => {
+      var result = deepmerge(config, subConfig);
+      return write(JSON.stringify(result));
+    });
   };
 }
 

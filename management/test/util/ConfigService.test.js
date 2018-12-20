@@ -6,19 +6,23 @@ var ConfigService = require("../../src/util/ConfigService");
 
 var defaultFile = __dirname + "/res/.env.json";
 var defaultConfig = {
-  password: "abc123"
+  password: "abc123",
+  temp: "ephemeral"
 };
 
-afterEach(function() {
+var reset = function() {
   fs.writeFile(defaultFile, JSON.stringify(defaultConfig), function(err) {
     if (err) {
       console.error("Error occurred while resetting:");
       console.error(err);
     }
   });
-});
+};
 
-describe("ConfigService", function() {
+beforeEach(reset);
+afterEach(reset);
+
+describe("ConfigService.getConfig", function() {
   it("should get config", function(done) {
     var filename = defaultFile;
     var configService = new ConfigService({
@@ -48,17 +52,64 @@ describe("ConfigService", function() {
         return done(`Should not have been able to find ${filename}`);
       })
       .catch(err => {
+        expect(err.code).to.be.equal("ENOENT");
         return done();
       });
   });
 
-  //   it("should stabd simple test", function() {
-  //     var x = 5;
-  //     var y = 1;
-  //     var sum = x + y;
+  it("should handle bad files", function(done) {
+    fs.writeFile(defaultFile, "some non-JSON content", function(err) {
+      if (err) {
+        console.error("Error occurred while resetting:");
+        console.error(err);
+      }
 
-  //     console.log(__dirname);
+      var filename = defaultFile;
+      var configService = new ConfigService({
+        file: filename
+      });
+      configService
+        .getConfig()
+        .then(config => {
+          return done(`Should not have been able to process ${filename}`);
+        })
+        .catch(err => {
+          return done();
+        });
+    });
+  });
+});
 
-  //     expect(sum).to.be.equal(6);
-  //   });
+describe("ConfigService.addConfig", function() {
+  it("should write config", function(done) {
+    var filename = defaultFile;
+    var configService = new ConfigService({
+      file: filename
+    });
+    configService
+      .addConfig({
+        username: "usr",
+        temp: "override",
+        complex: { key: "value" }
+      })
+      .then(config => {
+        configService
+          .getConfig()
+          .then(newConfig => {
+            expect(newConfig).to.deep.equal({
+              password: "abc123",
+              temp: "override",
+              username: "usr",
+              complex: { key: "value" }
+            });
+            done();
+          })
+          .catch(err => {
+            done(err);
+          });
+      })
+      .catch(err => {
+        return done(err);
+      });
+  });
 });
