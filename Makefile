@@ -14,6 +14,9 @@ isaliveapp.arm32: arm32
 isaliveapp.dev:
 	docker build -t $(REPO)/$(IMAGE) --build-arg BASE_IMAGE=node:8 ./isaliveapp/
 
+isaliveapp.run: isaliveapp.dev
+	docker run -p 80:80 -p 443:443 $(REPO)/$(IMAGE)
+
 isaliveapp.deploy: isaliveapp.arm32
 	docker tag $(REPO)/$(IMAGE) $(REPO)/$(IMAGE):$(TAG)
 	docker push $(REPO)/$(IMAGE):$(TAG)
