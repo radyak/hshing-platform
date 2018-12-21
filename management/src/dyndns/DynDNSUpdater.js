@@ -6,6 +6,13 @@ const get = require("simple-get");
 var cron = require("node-cron");
 const SimpleParamCheck = require("../util/SimpleParamCheck");
 
+var state = {
+  previousExternalIP: null,
+  error: null
+};
+
+var cronJob = null;
+
 /**
  * Simple client to update DynDNS domains according to DynDNS protocol.
  * See https://help.dyn.com/remote-access-api/perform-update/
@@ -23,20 +30,17 @@ class DynDNSUpdater {
       domain: config.domain
     };
     SimpleParamCheck.checkForFalsy(this.config);
-
-    this._state = {
-      previousExternalIP: null,
-      error: null
-    };
-    this._previousExternalIP = null;
-    this._cron = null;
-    this._retry = false;
   }
 
   updateOnce() {
     getIP()
       .then(EXTERNALIP => {
-        if (this._state.previousExternalIP === EXTERNALIP) {
+        console.log(
+          `${
+            state.previousExternalIP
+          } (${typeof state.previousExternalIP}) / ${EXTERNALIP} (${typeof EXTERNALIP})`
+        );
+        if (state.previousExternalIP === EXTERNALIP) {
           console.log(
             `The external IP ${EXTERNALIP} hasn't changed; nothing to do`
           );
@@ -65,7 +69,7 @@ class DynDNSUpdater {
           },
           function(err, res) {
             if (err) {
-              this._state = {
+              state = {
                 previousExternalIP: null,
                 error: err
               };
@@ -78,7 +82,7 @@ class DynDNSUpdater {
               // TODO: evaluation of chunk's content
               // API like https://www.npmjs.com/package/ddns-updater or https://www.npmjs.com/package/node-dyndns-client
               console.log("DynDNS server responded with: " + chunk);
-              this._state = {
+              state = {
                 previousExternalIP: EXTERNALIP,
                 error: null
               };
@@ -92,7 +96,7 @@ class DynDNSUpdater {
   }
 
   updateCyclic(minutes) {
-    if (this._cron != null) {
+    if (cronJob != null) {
       throw new Error(
         "A cyclic update is already running, cannot start another one"
       );
@@ -101,7 +105,7 @@ class DynDNSUpdater {
     var cronExpression = `*/${minutes} * * * *`;
     cron.validate(cronExpression);
 
-    this._cron = cron.schedule(
+    cronJob = cron.schedule(
       cronExpression,
       () => {
         this.updateOnce();
@@ -112,17 +116,17 @@ class DynDNSUpdater {
     );
     // Run first update immediately
     this.updateOnce();
-    this._cron.start();
+    cronJob.start();
     console.log(`Started cyclic update every ${minutes} minutes`);
   }
 
   stopCyclicUpdate() {
-    if (this._cron == null) {
+    if (cronJob == null) {
       console.warn("Cannot stop cyclic update - non was started");
       return;
     }
-    this._cron.destroy();
-    this._cron = null;
+    cronJob.destroy();
+    cronJob = null;
     console.log(`Cyclic update stopped`);
   }
 }
