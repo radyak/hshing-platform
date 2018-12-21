@@ -15,7 +15,7 @@ management.dev:
 	docker build -t $(REPO)/$(IMAGE) --build-arg BASE_IMAGE=node:8 ./management/
 
 management.run: management.dev
-	docker run -p 80:80 -p 443:443 -v /home/fvo/tmp/test-mounts:/usr/src/app/test-mounts $(REPO)/$(IMAGE)
+	docker run -p 80:80 -p 443:443 -v /home/fvo/tmp/test-mounts:/usr/src/conf -e CONF_DIR=/usr/src/conf $(REPO)/$(IMAGE)
 	# On Raspberry PI:
 	# docker run -p 80:80 -p 443:443 -v /home/pirate/conf:/usr/src/conf -e CONF_DIR=/usr/src/conf andnowayak/management
 

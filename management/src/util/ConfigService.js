@@ -6,7 +6,7 @@ var deepmerge = require("deepmerge");
 function ConfigService(customConfig) {
   var CONFIG = Object.assign(
     {
-      file: __dirname + "/.env.json",
+      file: __dirname + "/.env.conf",
       keyProvider: new FileEnvKeyProvider({
         file: __dirname + "/.env.key"
       })
@@ -28,8 +28,8 @@ function ConfigService(customConfig) {
       FileIO.read(CONFIG.file),
       CONFIG.keyProvider.get()
     ]).then(values => {
-      var configString = values[0].toString("utf-8");
-      var key = values[1].toString("utf-8");
+      var configString = values[0].toString("utf8");
+      var key = values[1].toString("utf8");
 
       // Content was not encrypted, parse directly
       if (isJson(configString)) {
@@ -54,7 +54,7 @@ function ConfigService(customConfig) {
     return Promise.all([this.getConfig(), CONFIG.keyProvider.get()]).then(
       values => {
         var config = values[0];
-        var key = values[1].toString("utf-8");
+        var key = values[1].toString();
         var result = deepmerge(config, subConfig);
         var cryptService = new CryptService({
           password: key

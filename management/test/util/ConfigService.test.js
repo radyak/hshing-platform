@@ -6,7 +6,7 @@ var expect = chai.expect;
 var ConfigService = require("../../src/util/ConfigService");
 var FileEnvKeyProvider = require("../../src/util/FileEnvKeyProvider");
 
-var defaultFile = __dirname + "/res/.env.json";
+var defaultFile = __dirname + "/res/.env.conf";
 
 var envKeyProvider = new FileEnvKeyProvider({
   file: __dirname + "/res/.env.key"

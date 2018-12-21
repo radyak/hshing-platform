@@ -35,11 +35,6 @@ class DynDNSUpdater {
   updateOnce() {
     getIP()
       .then(EXTERNALIP => {
-        console.log(
-          `${
-            state.previousExternalIP
-          } (${typeof state.previousExternalIP}) / ${EXTERNALIP} (${typeof EXTERNALIP})`
-        );
         if (state.previousExternalIP === EXTERNALIP) {
           console.log(
             `The external IP ${EXTERNALIP} hasn't changed; nothing to do`
@@ -47,7 +42,11 @@ class DynDNSUpdater {
           return;
         }
 
-        console.log(`The external IP is now ${EXTERNALIP}`);
+        console.log(
+          `The external IP has changed from ${
+            state.previousExternalIP
+          } to ${EXTERNALIP}`
+        );
 
         var base64Credentials = Buffer.from(
           `${this.config.username}:${this.config.password}`
@@ -117,7 +116,7 @@ class DynDNSUpdater {
     // Run first update immediately
     this.updateOnce();
     cronJob.start();
-    console.log(`Started cyclic update every ${minutes} minutes`);
+    console.log(`Started cyclic update every ${minutes} minute(s)`);
   }
 
   stopCyclicUpdate() {
