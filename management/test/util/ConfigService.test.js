@@ -7,6 +7,7 @@ var ConfigService = require("../../src/util/ConfigService");
 var FileEnvKeyProvider = require("../../src/util/FileEnvKeyProvider");
 
 var defaultFile = __dirname + "/res/.env.conf";
+var defaultKeyFile = __dirname + "/res/.env.key";
 
 var envKeyProvider = new FileEnvKeyProvider({
   file: __dirname + "/res/.env.key"
@@ -18,14 +19,18 @@ var defaultConfig = {
 };
 
 var reset = function(done) {
-  fs.writeFile(defaultFile, JSON.stringify(defaultConfig), function(err) {
-    if (err) {
+  Promise.all([
+    FileIO.write(defaultFile, JSON.stringify(defaultConfig)),
+    FileIO.write(defaultKeyFile, "abc123")
+  ])
+    .then(() => {
+      done();
+    })
+    .catch(err => {
       console.error("Error occurred while resetting:");
       console.error(err);
       done(err);
-    }
-    done();
-  });
+    });
 };
 
 beforeEach(reset);
