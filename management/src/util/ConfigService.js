@@ -64,6 +64,10 @@ function ConfigService(customConfig) {
       }
     );
   };
+
+  this.addConfig({}).then(() => {
+    console.log("done");
+  });
 }
 
 module.exports = ConfigService;

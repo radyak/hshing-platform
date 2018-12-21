@@ -34,7 +34,6 @@ var reset = function(done) {
 };
 
 beforeEach(reset);
-// afterEach(reset);
 
 describe("ConfigService.getConfig", function() {
   it("should get config", function(done) {

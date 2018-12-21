@@ -11,6 +11,9 @@ prepare.arm32:
 management.arm32: prepare.arm32
 	docker build -t $(REPO)/$(IMAGE) --build-arg BASE_IMAGE=arm32v7/node ./management/
 
+management.test:
+	npm --prefix ./management test
+	
 management.dev:
 	docker build -t $(REPO)/$(IMAGE) --build-arg BASE_IMAGE=node:8 ./management/
 

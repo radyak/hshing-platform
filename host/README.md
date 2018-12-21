@@ -1,4 +1,4 @@
-# Hardware Host Set-Up
+# _Home Sweet Host &copy;_ - Host Set-Up
 
 ## SSH
 
