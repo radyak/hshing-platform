@@ -1,4 +1,3 @@
-#ARG BASE_IMAGE=node:8
 ARG BASE_IMAGE=arm32v7/node
 
 FROM ${BASE_IMAGE}

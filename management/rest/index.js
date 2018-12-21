@@ -1,4 +1,3 @@
-var greenlock = require("greenlock-express");
 var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
@@ -23,16 +22,4 @@ app.use("*", function(req, res) {
   res.status(404).send("Invalid URL");
 });
 
-greenlock
-  .create({
-    version: "draft-11",
-    server: "https://acme-v02.api.letsencrypt.org/directory",
-    configDir: "~/.config/acme/",
-    email: "contact@fvogel.net",
-    approvedDomains: ["test002.fvogel.net"],
-    agreeTos: true,
-    app: app,
-    communityMember: true,
-    telemetry: false
-  })
-  .listen(80, 443);
+module.exports = app;
