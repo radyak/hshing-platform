@@ -2,11 +2,16 @@
 
 const DynDNSUpdater = require("./src/dyndns/DynDNSUpdater");
 const ConfigService = require("./src/util/ConfigService");
+const FileEnvKeyProvider = require("./src/util/FileEnvKeyProvider");
 const greenlock = require("greenlock-express");
 const app = require("./rest/index");
 
+var keyProvider = new FileEnvKeyProvider({
+  file: (process.env.CONF_DIR || __dirname) + "/.env.key"
+});
 var configService = new ConfigService({
-  file: (process.env.CONF_DIR || __dirname) + "/.env.json"
+  file: (process.env.CONF_DIR || __dirname) + "/.env.json",
+  keyProvider: keyProvider
 });
 configService
   .getConfig()

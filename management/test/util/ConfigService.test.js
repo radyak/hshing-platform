@@ -1,32 +1,41 @@
 var chai = require("chai");
 var fs = require("fs");
+var FileIO = require("../../src/util/FileIO");
 var expect = chai.expect;
 
 var ConfigService = require("../../src/util/ConfigService");
+var FileEnvKeyProvider = require("../../src/util/FileEnvKeyProvider");
 
 var defaultFile = __dirname + "/res/.env.json";
+
+var envKeyProvider = new FileEnvKeyProvider({
+  file: __dirname + "/res/.env.key"
+});
+
 var defaultConfig = {
   password: "abc123",
   temp: "ephemeral"
 };
 
-var reset = function() {
+var reset = function(done) {
   fs.writeFile(defaultFile, JSON.stringify(defaultConfig), function(err) {
     if (err) {
       console.error("Error occurred while resetting:");
       console.error(err);
+      done(err);
     }
+    done();
   });
 };
 
 beforeEach(reset);
-afterEach(reset);
+// afterEach(reset);
 
 describe("ConfigService.getConfig", function() {
   it("should get config", function(done) {
-    var filename = defaultFile;
     var configService = new ConfigService({
-      file: filename
+      file: defaultFile,
+      keyProvider: envKeyProvider
     });
     configService
       .getConfig()
@@ -44,7 +53,8 @@ describe("ConfigService.getConfig", function() {
   it("should handle non-existing files", function(done) {
     var filename = __dirname + "/not/existing.json";
     var configService = new ConfigService({
-      file: filename
+      file: filename,
+      keyProvider: envKeyProvider
     });
     configService
       .getConfig()
@@ -64,14 +74,14 @@ describe("ConfigService.getConfig", function() {
         console.error(err);
       }
 
-      var filename = defaultFile;
       var configService = new ConfigService({
-        file: filename
+        file: defaultFile,
+        keyProvider: envKeyProvider
       });
       configService
         .getConfig()
         .then(config => {
-          return done(`Should not have been able to process ${filename}`);
+          return done(`Should not have been able to process ${defaultFile}`);
         })
         .catch(err => {
           return done();
@@ -82,9 +92,9 @@ describe("ConfigService.getConfig", function() {
 
 describe("ConfigService.addConfig", function() {
   it("should write config", function(done) {
-    var filename = defaultFile;
     var configService = new ConfigService({
-      file: filename
+      file: defaultFile,
+      keyProvider: envKeyProvider
     });
     configService
       .addConfig({
@@ -102,7 +112,6 @@ describe("ConfigService.addConfig", function() {
               username: "usr",
               complex: { key: "value" }
             });
-            done();
           })
           .catch(err => {
             done(err);
@@ -110,6 +119,17 @@ describe("ConfigService.addConfig", function() {
       })
       .catch(err => {
         return done(err);
+      })
+      .then(() => {
+        return FileIO.read(defaultFile);
+      })
+      .then(content => {
+        try {
+          JSON.parse(content);
+          done("File content should be encrypted, but was parseable");
+        } catch (err) {
+          done();
+        }
       });
   });
 });
