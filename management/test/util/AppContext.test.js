@@ -15,13 +15,16 @@ describe("AppContext", function() {
   it("can register and get components", function() {
     var obj = { key: "value" };
     AppContext.register("someName", obj);
-    var objFromContext = AppContext.get("someName");
+    var objFromContext = AppContext.someName;
     expect(objFromContext).to.deep.equal(obj);
+
+    var sameObjFromContext = AppContext["someName"];
+    expect(sameObjFromContext).to.deep.equal(obj);
   });
 
   it("should throw an Error when getting non-registered components", function(done) {
     try {
-      AppContext.get("wrongName");
+      AppContext.wrongName;
       done("Should not have returned non-registered component");
     } catch (e) {
       expect(e.toString()).to.equal(

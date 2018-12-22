@@ -14,13 +14,14 @@
   "author": "florian.vogel84@gmx.net",
   "license": "ISC",
   "dependencies": {
+    "bottlejs": "^1.7.1",
     "deepmerge": "^3.0.0",
+    "express": "^4.16.4",
     "external-ip": "^2.1.1",
-    "node-cron": "^2.0.3",
-    "simple-get": "^3.0.3",
     "greenlock": "^2.5.0",
     "greenlock-express": "^2.5.0",
-    "express": "^4.16.4"
+    "node-cron": "^2.0.3",
+    "simple-get": "^3.0.3"
   },
   "optionalDependencies": {
     "le-acme-core": "^2.1.4",

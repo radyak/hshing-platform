@@ -1,24 +1,32 @@
+var TypeUtil = require("./TypeUtil");
+
 var Context = {};
 
-var register = function(name, component) {
-  if (typeof name !== "string" || !name.trim()) {
+var AppContext = new Proxy(Context, {
+  get(target, name, receiver) {
+    let rv = Reflect.get(target, name, receiver);
+
+    if (!rv) {
+      throw new Error(`No component with name ${name} present in AppContext`);
+    }
+    // Do the magic here
+    return rv;
+  }
+});
+
+AppContext.register = function(name, component) {
+  if (!TypeUtil.isString(name) || !name.trim()) {
     throw new Error(
       `Components must be registered with a non-empty name of type *string*, but was tried with ${name} (type: ${typeof name})`
     );
   }
+  var key = name.trim();
   if (Context.hasOwnProperty(name)) {
     console.warn(
       `A component with name '${name}' has already been registered; overwriting it`
     );
   }
-  Context[name.trim()] = component;
-};
-
-var get = function(name) {
-  if (!Context.hasOwnProperty(name)) {
-    throw new Error(`No component with name ${name} present in AppContext`);
-  }
-  return Context[name];
+  Context[key] = component;
 };
 
 /**
@@ -43,7 +51,4 @@ function getArgs(func) {
     });
 }
 
-module.exports = {
-  register: register,
-  get: get
-};
+module.exports = AppContext;
