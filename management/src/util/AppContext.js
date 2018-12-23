@@ -58,11 +58,14 @@ AppContext.register = function (name, component) {
  * taken from https://davidwalsh.name/javascript-arguments
  */
 function getArgs(func) {
-  // TODO: class syntax must also be covered here
-  // First match everything inside the function argument parens.
-  var args = func.toString().match(/function\s.*?\(([^)]*)\)/)[1];
+  var matches = func.toString().match(/function\s.*?\(([^)]*)\)/);
+  if (!matches) {
+    // TODO: Unify RegExpressions
+    matches = func.toString().match(/constructor\s.*?\(([^)]*)\)/);
+  }
+  var args = matches ? matches[1] : "";
+  console.log(`args=${args}`);
 
-  // Split the arguments string into an array comma delimited.
   return args
     .split(",")
     .map(function (arg) {

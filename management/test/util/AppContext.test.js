@@ -83,17 +83,47 @@ describe("AppContext", function () {
       expect(AppContext.Flashlight.on()).to.equal("Flashlight runs with battery");
     });
 
-    // Extend to work with classes
-    // it("should inject dependencies automatically (new class definition)", function () {
+    it("should inject dependencies automatically (new class definition)", function () {
 
-    //   AppContext.register("Battery", SolarPanel);
-    //   AppContext.register("Flashlight", Flashlight);
+      AppContext.register("Battery", SolarPanel);
+      AppContext.register("Flashlight", Flashlight);
 
-    //   expect(TypeUtil.isObject(AppContext.Battery)).to.be.true;
-    //   expect(TypeUtil.isObject(AppContext.Flashlight)).to.be.true;
+      expect(TypeUtil.isObject(AppContext.Battery)).to.be.true;
+      expect(TypeUtil.isObject(AppContext.Flashlight)).to.be.true;
 
-    //   expect(AppContext.Flashlight.on()).to.equal("Flashlight runs with solar panel");
-    // });
+      expect(AppContext.Flashlight.on()).to.equal("Flashlight runs with solar panel");
+    });
+
+    it("should throw Error on unsatisfied dependency", function (done) {
+
+      function Flashlight(battery, config) {
+        this.battery = battery;
+        this.config = config;
+
+        this.on = function () {
+          if (!this.battery) {
+            throw new Error("No battery inserted");
+          }
+          var source = this.battery.getEnergy();
+          return `Flashlight runs with ${source} and config key '${this.config.key}'`;
+        };
+      }
+      AppContext.register("Battery", SolarPanel);
+      AppContext.register("Flashlight", Flashlight);
+
+      try {
+        AppContext.Flashlight;
+        done("Should have thrown an Error");
+      } catch (e) {
+        // nothing to do here, continue
+      }
+
+      AppContext.register("config", { key: "value" });
+
+      expect(AppContext.Flashlight.on()).to.equal("Flashlight runs with solar panel and config key 'value'");
+
+      done();
+    });
 
     it("should create always the same instances", function () {
 
