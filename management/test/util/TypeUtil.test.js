@@ -6,11 +6,11 @@ describe("TypeUtils", function() {
     it("should recognize objects created with function definition", function() {
       function FunctionObjectDefinition() {}
       var object = new FunctionObjectDefinition();
+      expect(TypeUtil.isObject(object)).is.true;
       expect(TypeUtil.isBoolean(object)).is.false;
       expect(TypeUtil.isString(object)).is.false;
       expect(TypeUtil.isFunction(object)).is.false;
       expect(TypeUtil.isNumber(object)).is.false;
-      expect(TypeUtil.isObject(object)).is.true;
     });
 
     it("should recognize objects created with class definition", function() {
@@ -21,7 +21,6 @@ describe("TypeUtils", function() {
       expect(TypeUtil.isString(object)).is.false;
       expect(TypeUtil.isFunction(object)).is.false;
       expect(TypeUtil.isNumber(object)).is.false;
-      expect(TypeUtil.isObject(object)).is.true;
     });
 
     it("should recognize objects created with direct definition", function() {
@@ -31,18 +30,29 @@ describe("TypeUtils", function() {
       expect(TypeUtil.isString(object)).is.false;
       expect(TypeUtil.isFunction(object)).is.false;
       expect(TypeUtil.isNumber(object)).is.false;
-      expect(TypeUtil.isObject(object)).is.true;
     });
   });
 
-  it("should recognize functions", function() {
-    function someFunction() {}
-    expect(TypeUtil.isFunction(someFunction)).is.true;
-    expect(TypeUtil.isFunction(new someFunction())).is.false;
-    expect(TypeUtil.isBoolean(someFunction)).is.false;
-    expect(TypeUtil.isString(someFunction)).is.false;
-    expect(TypeUtil.isNumber(someFunction)).is.false;
-    expect(TypeUtil.isObject(someFunction)).is.false;
+  describe("isFunction", function() {
+    it("should recognize functions", function() {
+      function someFunction() {}
+      expect(TypeUtil.isFunction(someFunction)).is.true;
+      expect(TypeUtil.isFunction(new someFunction())).is.false;
+      expect(TypeUtil.isBoolean(someFunction)).is.false;
+      expect(TypeUtil.isString(someFunction)).is.false;
+      expect(TypeUtil.isNumber(someFunction)).is.false;
+      expect(TypeUtil.isObject(someFunction)).is.false;
+    });
+
+    it("should recognize class definitions as functions", function() {
+      class ClassObjectDefinition {}
+      expect(TypeUtil.isFunction(ClassObjectDefinition)).is.true;
+      expect(TypeUtil.isFunction(new ClassObjectDefinition())).is.false;
+      expect(TypeUtil.isObject(ClassObjectDefinition)).is.false;
+      expect(TypeUtil.isBoolean(ClassObjectDefinition)).is.false;
+      expect(TypeUtil.isString(ClassObjectDefinition)).is.false;
+      expect(TypeUtil.isNumber(ClassObjectDefinition)).is.false;
+    });
   });
 
   it("should recognize booleans", function() {
