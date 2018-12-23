@@ -6,7 +6,7 @@ var AppContext = new Proxy(Context, {
   get(target, name, receiver) {
     var key = name.trim().toLowerCase();
     let rv = Reflect.get(target, key, receiver);
-    if (key === "register") {
+    if (forbiddenToOverrideProperties.indexOf(key) !== -1) {
       return rv;
     }
 
@@ -14,6 +14,11 @@ var AppContext = new Proxy(Context, {
       throw new Error(
         `No component with name '${name}' / key '${key}' present in AppContext`
       );
+    }
+
+    if (!TypeUtil.isFunction(rv)) {
+      // Not a constructor -> can't be instantiated (any more)
+      return rv;
     }
     rv = instantiate(rv);
     // AppContext.register(name, rv);
@@ -23,10 +28,6 @@ var AppContext = new Proxy(Context, {
 });
 
 var instantiate = function (component) {
-  if (!TypeUtil.isFunction(component)) {
-    // Not a constructor -> it is already instantiated
-    return component;
-  }
   var dependencies = [null];
   var dependencyNames = getArgs(component);
   for (var i in dependencyNames) {
@@ -38,6 +39,9 @@ var instantiate = function (component) {
 };
 
 AppContext.register = function (name, component) {
+  if (forbiddenToOverrideProperties.indexOf(name) !== -1) {
+    throw new Error(`Registration with keys ${forbiddenToOverrideProperties.join(", ")} is not allowed`);
+  }
   if (!TypeUtil.isString(name) || !name.trim()) {
     throw new Error(
       `Components must be registered with a non-empty name of type *string*, but was tried with ${name} (type: ${typeof name})`
@@ -64,7 +68,6 @@ function getArgs(func) {
     matches = func.toString().match(/constructor\s.*?\(([^)]*)\)/);
   }
   var args = matches ? matches[1] : "";
-  console.log(`args=${args}`);
 
   return args
     .split(",")
@@ -77,5 +80,7 @@ function getArgs(func) {
       return arg;
     });
 }
+
+var forbiddenToOverrideProperties = Object.keys(AppContext);
 
 module.exports = AppContext;

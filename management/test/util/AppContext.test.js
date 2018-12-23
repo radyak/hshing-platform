@@ -3,11 +3,22 @@ var AppContext = require("../../src/util/AppContext");
 var TypeUtil = require("../../src/util/TypeUtil");
 
 describe("AppContext", function () {
+
   it("should throw an Error when registering components with invalid names", function (done) {
     var obj = { key: "value" };
     try {
       AppContext.register(" ", obj);
       done("Should not have accepted white-space-only string as name");
+    } catch (e) {
+      done();
+    }
+  });
+
+  it("should throw an Error when registering components with protected names", function (done) {
+    var obj = { key: "value" };
+    try {
+      AppContext.register("register", obj);
+      done("Should not have accepted a protected name");
     } catch (e) {
       done();
     }
@@ -19,8 +30,18 @@ describe("AppContext", function () {
     var objFromContext = AppContext.something;
     expect(objFromContext).to.deep.equal(obj);
 
-    // var sameObjFromContext = AppContext["someName"];
-    // expect(sameObjFromContext).to.deep.equal(obj);
+    var sameObjFromContext = AppContext["something"];
+    expect(sameObjFromContext).to.deep.equal(obj);
+  });
+
+  it("can register and get primitives", function () {
+    AppContext.register("someString", "some string");
+    AppContext.register("someNumber", 5.1);
+    AppContext.register("someBoolean", true);
+
+    expect(AppContext.someString).to.equal("some string");
+    expect(AppContext.someNumber).to.equal(5.1);
+    expect(AppContext.someBoolean).to.equal(true);
   });
 
   it("should throw an Error when getting non-registered components", function (done) {

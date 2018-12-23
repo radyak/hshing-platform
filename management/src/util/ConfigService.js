@@ -1,20 +1,9 @@
 var FileIO = require("./FileIO");
-var FileEnvKeyProvider = require("./FileEnvKeyProvider");
 var CryptService = require("./CryptService");
 var deepmerge = require("deepmerge");
 
-function ConfigService(customConfig) {
-  var CONFIG = Object.assign(
-    {
-      file: __dirname + "/.env.conf",
-      keyProvider: new FileEnvKeyProvider({
-        file: __dirname + "/.env.key"
-      })
-    },
-    customConfig
-  );
-
-  var isJson = function(string) {
+function ConfigService(configFile, keyProvider) {
+  var isJson = function (string) {
     try {
       JSON.parse(string);
     } catch (e) {
@@ -23,10 +12,10 @@ function ConfigService(customConfig) {
     return true;
   };
 
-  this.getConfig = function() {
+  this.getConfig = function () {
     return Promise.all([
-      FileIO.read(CONFIG.file),
-      CONFIG.keyProvider.get()
+      FileIO.read(configFile),
+      keyProvider.get()
     ]).then(values => {
       var configString = values[0].toString("utf8");
       var key = values[1].toString("utf8");
@@ -46,12 +35,12 @@ function ConfigService(customConfig) {
       }
 
       // Unreadable, since content was neither unencrypted nor decryptable with provided key
-      throw new Error(`${CONFIG.file} is not JSON (${configString})`);
+      throw new Error(`${configFile} is not JSON (${configString})`);
     });
   };
 
-  this.addConfig = function(subConfig) {
-    return Promise.all([this.getConfig(), CONFIG.keyProvider.get()]).then(
+  this.addConfig = function (subConfig) {
+    return Promise.all([this.getConfig(), keyProvider.get()]).then(
       values => {
         var config = values[0];
         var key = values[1].toString();
@@ -60,7 +49,7 @@ function ConfigService(customConfig) {
           password: key
         });
         var encryptedResult = cryptService.encrypt(JSON.stringify(result));
-        return FileIO.write(CONFIG.file, encryptedResult);
+        return FileIO.write(configFile, encryptedResult);
       }
     );
   };

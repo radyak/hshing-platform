@@ -1,20 +1,13 @@
 "use strict";
 
 const DynDNSUpdater = require("./src/dyndns/DynDNSUpdater");
-const ConfigService = require("./src/util/ConfigService");
-const FileEnvKeyProvider = require("./src/util/FileEnvKeyProvider");
 const greenlock = require("greenlock-express");
 const app = require("./src/rest/index");
+const AppContext = require("./src/util/AppContext");
 
-var keyProvider = new FileEnvKeyProvider({
-  file: (process.env.CONF_DIR || __dirname) + "/.env.key"
-});
-var configService = new ConfigService({
-  file: (process.env.CONF_DIR || __dirname) + "/.env.conf",
-  keyProvider: keyProvider
-});
+require("./app-context");
 
-configService
+AppContext.configService
   .getConfig()
   .then(config => {
     var dynDNSUpdater = new DynDNSUpdater(config.dynDns);
