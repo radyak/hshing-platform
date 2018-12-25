@@ -24,10 +24,10 @@ class DynDNSUpdater {
    */
   constructor(config) {
     this.config = {
-      username: config.username,
-      password: config.password,
-      dynDnsHost: config.dynDnsHost,
-      domain: config.domain
+      username: config.dynDns.username,
+      password: config.dynDns.password,
+      dynDnsHost: config.dynDns.dynDnsHost,
+      domain: config.hostDomain
     };
     SimpleParamCheck.checkForFalsy(this.config);
   }
@@ -44,7 +44,7 @@ class DynDNSUpdater {
 
         console.log(
           `The external IP has changed from ${
-            state.previousExternalIP
+          state.previousExternalIP
           } to ${EXTERNALIP}`
         );
 
@@ -54,7 +54,7 @@ class DynDNSUpdater {
 
         const URL = `https://${this.config.dynDnsHost}/nic/update?hostname=${
           this.config.domain
-        }&myip=${EXTERNALIP}`;
+          }&myip=${EXTERNALIP}`;
 
         get(
           {
@@ -66,7 +66,7 @@ class DynDNSUpdater {
               Authorization: `Basic ${base64Credentials}`
             }
           },
-          function(err, res) {
+          function (err, res) {
             if (err) {
               state = {
                 previousExternalIP: null,
@@ -77,7 +77,7 @@ class DynDNSUpdater {
 
             res.setTimeout(10000);
 
-            res.on("data", function(chunk) {
+            res.on("data", function (chunk) {
               // TODO: evaluation of chunk's content
               // API like https://www.npmjs.com/package/ddns-updater or https://www.npmjs.com/package/node-dyndns-client
               console.log("DynDNS server responded with: " + chunk);
@@ -101,7 +101,7 @@ class DynDNSUpdater {
       );
     }
 
-    var cronExpression = `*/${minutes} * * * *`;
+    var cronExpression = `*/${minutes || 5} * * * *`;
     cron.validate(cronExpression);
 
     cronJob = cron.schedule(

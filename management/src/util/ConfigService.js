@@ -3,6 +3,9 @@ var CryptService = require("./CryptService");
 var deepmerge = require("deepmerge");
 
 function ConfigService(configFile, keyProvider) {
+
+  var configCache = null;
+
   var isJson = function (string) {
     try {
       JSON.parse(string);
@@ -12,7 +15,7 @@ function ConfigService(configFile, keyProvider) {
     return true;
   };
 
-  this.getConfig = function () {
+  var readConfig = function () {
     return Promise.all([
       FileIO.read(configFile),
       keyProvider.get()
@@ -39,16 +42,31 @@ function ConfigService(configFile, keyProvider) {
     });
   };
 
+  this.getConfig = function () {
+    var promise;
+    if (configCache === null) {
+      promise = readConfig().then(config => {
+        configCache = config;
+        return configCache;
+      });
+    } else {
+      promise = new Promise((resolve, reject) => {
+        resolve(configCache);
+      });
+    }
+    return promise;
+  }
+
   this.addConfig = function (subConfig) {
     return Promise.all([this.getConfig(), keyProvider.get()]).then(
       values => {
         var config = values[0];
         var key = values[1].toString();
-        var result = deepmerge(config, subConfig);
+        configCache = deepmerge(config, subConfig);
         var cryptService = new CryptService({
           password: key
         });
-        var encryptedResult = cryptService.encrypt(JSON.stringify(result));
+        var encryptedResult = cryptService.encrypt(JSON.stringify(configCache));
         return FileIO.write(configFile, encryptedResult);
       }
     );

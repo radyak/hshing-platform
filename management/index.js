@@ -10,21 +10,21 @@ require("./app-context");
 AppContext.configService
   .getConfig()
   .then(config => {
-    var dynDNSUpdater = new DynDNSUpdater(config.dynDns);
+    var dynDNSUpdater = new DynDNSUpdater(config);
     dynDNSUpdater.updateCyclic(1);
-
-    greenlock
-      .create({
-        version: "draft-11",
-        server: "https://acme-v02.api.letsencrypt.org/directory",
-        configDir: "~/.config/acme/",
-        email: "contact@fvogel.net",
-        approvedDomains: [config.dynDns.domain],
-        agreeTos: true,
-        app: app,
-        communityMember: true,
-        telemetry: false
-      })
+    return config;
+  }).then(config => {
+    greenlock.create({
+      version: "draft-11",
+      server: "https://acme-v02.api.letsencrypt.org/directory",
+      configDir: "~/.config/acme/",
+      email: config.admin.email,
+      approvedDomains: [config.hostDomain],
+      agreeTos: true,
+      app: app,
+      communityMember: true,
+      telemetry: false
+    })
       .listen(80, 443);
   })
   .catch(err => {
