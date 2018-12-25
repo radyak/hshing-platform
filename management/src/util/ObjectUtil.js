@@ -24,8 +24,13 @@ var traverseObject = function (obj, fn) {
     }
 };
 
+var deepCopy = function (obj) {
+    return JSON.parse(JSON.stringify(obj));
+}
+
 var ObjectUtil = {
-    traverse: traverse
+    traverse: traverse,
+    deepCopy: deepCopy
 };
 
 module.exports = ObjectUtil;

@@ -1,18 +1,21 @@
 var TypeUtil = {
-  isBoolean: function(test) {
+  isBoolean: function (test) {
     return typeof test === "boolean";
   },
-  isFunction: function(test) {
+  isFunction: function (test) {
     return typeof test === "function";
   },
-  isNumber: function(test) {
+  isNumber: function (test) {
     return typeof test === "number";
   },
-  isString: function(test) {
+  isString: function (test) {
     return typeof test === "string";
   },
-  isObject: function(test) {
-    return test != null && typeof test === "object";
+  isObject: function (test) {
+    return !!test && Object.prototype.toString.call(test) === '[object Object]';
+  },
+  isArray: function (test) {
+    return !!test && Object.prototype.toString.call(test) === '[object Array]';
   }
 };
 

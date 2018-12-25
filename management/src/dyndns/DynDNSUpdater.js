@@ -27,7 +27,8 @@ class DynDNSUpdater {
       username: config.dynDns.username,
       password: config.dynDns.password,
       dynDnsHost: config.dynDns.dynDnsHost,
-      domain: config.hostDomain
+      domain: config.hostDomain,
+      updateIntervalMinutes: config.dynDns.updateIntervalMinutes || 5
     };
     SimpleParamCheck.checkForFalsy(this.config);
   }
@@ -94,14 +95,14 @@ class DynDNSUpdater {
       });
   }
 
-  updateCyclic(minutes) {
+  updateCyclic() {
     if (cronJob != null) {
       throw new Error(
         "A cyclic update is already running, cannot start another one"
       );
     }
 
-    var cronExpression = `*/${minutes || 5} * * * *`;
+    var cronExpression = `*/${this.config.updateIntervalMinutes} * * * *`;
     cron.validate(cronExpression);
 
     cronJob = cron.schedule(
@@ -116,7 +117,7 @@ class DynDNSUpdater {
     // Run first update immediately
     this.updateOnce();
     cronJob.start();
-    console.log(`Started cyclic update every ${minutes} minute(s)`);
+    console.log(`Started cyclic update every ${this.config.updateIntervalMinutes} minute(s)`);
   }
 
   stopCyclicUpdate() {

@@ -1,5 +1,6 @@
 var FileIO = require("./FileIO");
 var CryptService = require("./CryptService");
+var ObjectUtil = require("./ObjectUtil");
 var deepmerge = require("deepmerge");
 
 function ConfigService(configFile, keyProvider) {
@@ -42,7 +43,7 @@ function ConfigService(configFile, keyProvider) {
     });
   };
 
-  this.getConfig = function () {
+  this.getConfig = function (hidePasswords) {
     var promise;
     if (configCache === null) {
       promise = readConfig().then(config => {
@@ -56,6 +57,21 @@ function ConfigService(configFile, keyProvider) {
     }
     return promise;
   }
+
+  this.getConfigSecure = function () {
+    return this.getConfig()
+      .then(config => {
+        return ObjectUtil.deepCopy(config);
+      })
+      .then(config => {
+        ObjectUtil.traverse(config, (key, val, owner) => {
+          if (/password/i.test(key)) {
+            owner[key] = "******";
+          }
+        });
+        return config;
+      });
+  };
 
   this.addConfig = function (subConfig) {
     return Promise.all([this.getConfig(), keyProvider.get()]).then(
@@ -72,8 +88,9 @@ function ConfigService(configFile, keyProvider) {
     );
   };
 
+  // Encrypt config
   this.addConfig({}).then(() => {
-    console.log("done");
+    console.log("Using encrypted config");
   });
 }
 

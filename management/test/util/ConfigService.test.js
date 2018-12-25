@@ -114,3 +114,23 @@ describe("ConfigService.addConfig", function () {
       });
   });
 });
+
+describe("ConfigService.getConfigSecure", function () {
+  it("should get config with masked password", function (done) {
+    var configService = new ConfigService(defaultFile, envKeyProvider);
+    configService
+      .getConfigSecure()
+      .then(config => {
+        console.log(`config is ${JSON.stringify(config)}`);
+        expect(config).to.deep.equal({
+          password: "******",
+          temp: "ephemeral"
+        });
+        return done();
+      })
+      .catch(err => {
+        console.error(err);
+        return done(err);
+      });
+  });
+});
