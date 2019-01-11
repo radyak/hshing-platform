@@ -1,7 +1,7 @@
 {
-  "name": "management",
+  "name": "gateway",
   "version": "0.0.1",
-  "description": "The Management Application clusters the core functionality of each _Home Sweet Host &copy;_",
+  "description": "The Gateway is the entry point for each _Home Sweet Host &copy;_",
   "main": "index.js",
   "directories": {
     "test": "test/*"
