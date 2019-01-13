@@ -22,7 +22,7 @@ app.use("/isAlive", function (req, res) {
 
 app.use('/admin', adminRoutes);
 
-// Old solution: require("./api_with-requests.js");
+// Old solution: require("./api-proxy_with-requests.js");
 app.use('/api/:system/*', (req, res) => {
     var regex = new RegExp(`/api/${req.params.system}/`,'i');
 
@@ -43,13 +43,4 @@ app.use("*", function (req, res) {
 });
 
 
-
-var server = http.createServer(app);
-
-// TODO: Test
-// TODO: Forward to correct backend system URL
-server.on('upgrade', function (req, socket, head) {
-  proxy.ws(req, socket, head, {target: req.originalUrl});
-});
-
-module.exports = server;
+module.exports = app;

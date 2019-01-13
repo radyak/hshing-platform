@@ -4,8 +4,10 @@ const Env = require("../util/Env");
 
 module.exports = function (config) {
 
+    var server;
+
     if (Env.isProd()) {
-        greenlock.create({
+        server = greenlock.create({
             version: "draft-11",
             server: "https://acme-v02.api.letsencrypt.org/directory",
             configDir: "~/.config/acme/",
@@ -15,11 +17,17 @@ module.exports = function (config) {
             app: app,
             communityMember: true,
             telemetry: false
-        })
-            .listen(80, 443);
+        });
+        server.listen(80, 443);
 
     } else {
         console.log("Using unsecured HTTP traffic - FOR DEVELOPMENT ONLY");
-        app.listen(80);
+        server = app.listen(80);
     }
+
+    // TODO: Test
+    // TODO: Forward to correct backend system URL
+    server.on('upgrade', function (req, socket, head) {
+        proxy.ws(req, socket, head, {target: req.originalUrl});
+    });
 }
