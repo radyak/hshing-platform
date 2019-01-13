@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var request = require('request');
 
-// router.all("/:system/:restUrl([a-zA-Z-?#=]*)", (req, res) => {
 router.all("/:system/*", (req, res) => {
 
     var regex = new RegExp(`/api/${req.params.system}/`,'i');

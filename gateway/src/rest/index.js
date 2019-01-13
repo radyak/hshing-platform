@@ -2,8 +2,11 @@ var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
 
+var http = require('http');
+var httpProxy = require('http-proxy');
+var proxy = httpProxy.createProxyServer();
+
 var adminRoutes = require("./admin");
-var apiRouting = require("./api");
 
 app.use(
   bodyParser.urlencoded({
@@ -14,19 +17,39 @@ app.use(bodyParser.raw());
 // app.use(bodyParser.json());
 
 app.use("/isAlive", function (req, res) {
-  res.status(200).send("Aww yiss");
-});
-
-app.use("/test", function (req, res) {
-  res.setHeader("Content-Type", "text/html; charset=utf-8");
-  res.end("Hello, World!\n\n💚 🔒.js");
+  res.status(200).end();
 });
 
 app.use('/admin', adminRoutes);
-app.use('/api', apiRouting);
+
+// Old solution: require("./api_with-requests.js");
+app.use('/api/:system/*', (req, res) => {
+    var regex = new RegExp(`/api/${req.params.system}/`,'i');
+
+    var backendUrl = req.originalUrl.replace(regex, '');
+    var system = req.params.system;
+    var port = 3000;
+
+    var url = `http://${system}:${port}/${backendUrl}`;
+
+    console.log("Forwarding to " + url);
+
+    // Attention: requires app.use(bodyParser.raw())!
+    proxy.web(req, res, {target: url});
+});
 
 app.use("*", function (req, res) {
   res.status(404).send("Invalid URL");
 });
 
-module.exports = app;
+
+
+var server = http.createServer(app);
+
+// TODO: Test
+// TODO: Forward to correct backend system URL
+server.on('upgrade', function (req, socket, head) {
+  proxy.ws(req, socket, head, {target: req.originalUrl});
+});
+
+module.exports = server;
