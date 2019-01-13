@@ -1,0 +1,17 @@
+{
+  "name": "test-app",
+  "version": "0.0.1",
+  "description": "Test app to check how requests reach a routed backend",
+  "main": "index.js",
+  "directories": {},
+  "repository": "https://github.com/radyak/test-app",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "florian.vogel84@gmx.net",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4",
+    "simple-get": "^3.0.3"
+  }
+}
