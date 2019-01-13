@@ -3,13 +3,15 @@ var app = express();
 var bodyParser = require("body-parser");
 
 var adminRoutes = require("./admin");
+var apiRouting = require("./api");
 
 app.use(
   bodyParser.urlencoded({
     extended: false
   })
 );
-app.use(bodyParser.json());
+app.use(bodyParser.raw());
+// app.use(bodyParser.json());
 
 app.use("/isAlive", function (req, res) {
   res.status(200).send("Aww yiss");
@@ -21,6 +23,7 @@ app.use("/test", function (req, res) {
 });
 
 app.use('/admin', adminRoutes);
+app.use('/api', apiRouting);
 
 app.use("*", function (req, res) {
   res.status(404).send("Invalid URL");

@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+
+  gateway:
+    container_name: gateway
+    build:
+      context: ./gateway
+      args:
+        - BASE_IMAGE=node:8
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - "/home/fvo/tmp/test-mounts:/usr/src/conf"
+    environment:
+      - CONF_DIR=/usr/src/conf
+      - ENV=dev
+
+  test-app:
+    container_name: test-app
+    build:
+      context: ./test-app
+      args:
+        - BASE_IMAGE=node:8
+    ports:
+      - 3000:3000
+    environment:
+      - PORT=3000
+    
