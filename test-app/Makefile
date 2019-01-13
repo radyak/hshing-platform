@@ -1,7 +1,7 @@
-
-IMAGE = test-app
-REPO = radyak
-TAG = latest
+#!make
+include ../.env
+include .build-parameters
+export
 
 default: test-app.deploy
 
@@ -16,7 +16,7 @@ test-app.dev:
 
 test-app.run: test-app.dev
 	docker run -p 3000:3000 -e PORT=3000 $(REPO)/$(IMAGE)
-	# On Raspberry PI: docker run [-p 3000:3000] radyak/test-app
+	# On Raspberry PI: docker run radyak/test-app
 
 test-app.deploy: test-app.arm32
 	docker tag $(REPO)/$(IMAGE) $(REPO)/$(IMAGE):$(TAG)
