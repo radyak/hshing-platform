@@ -17,8 +17,7 @@ module.exports = function (config) {
             app: app,
             communityMember: true,
             telemetry: false
-        });
-        server.listen(80, 443);
+        }).listen(80, 443);
 
     } else {
         console.log("Using unsecured HTTP traffic - FOR DEVELOPMENT ONLY");
@@ -27,6 +26,7 @@ module.exports = function (config) {
 
     // TODO: Test
     // TODO: Forward to correct backend system URL
+    // For websockets with greenlock, see https://git.coolaj86.com/coolaj86/greenlock-express.js/src/branch/master/examples/websockets.js
     server.on('upgrade', function (req, socket, head) {
         proxy.ws(req, socket, head, {target: req.originalUrl});
     });
