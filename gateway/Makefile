@@ -1,7 +1,7 @@
-
-IMAGE = gateway
-REPO = radyak
-TAG = latest
+#!make
+include ../.env
+include .build-parameters
+export
 
 default: gateway.deploy
 
@@ -25,3 +25,7 @@ gateway.run: gateway.dev
 gateway.deploy: gateway.arm32
 	docker tag $(REPO)/$(IMAGE) $(REPO)/$(IMAGE):$(TAG)
 	docker push $(REPO)/$(IMAGE):$(TAG)
+
+gateway-config.deploy:
+	scp -P $(PORT) .env.conf $(SSH_USER)@$(DOMAIN):/home/pirate/conf/.env.conf
+	scp -P $(PORT) .env.key $(SSH_USER)@$(DOMAIN):/home/pirate/conf/.env.key

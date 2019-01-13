@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+
+  portainer:
+    image: hypriot/rpi-portainer
+    ports:
+      - "9000:9000"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+
+#  busybox:
+#    image: hypriot/rpi-busybox-httpd
+#    ports:
+#      - "80:80"
+
+  gateway:
+    container_name: gateway
+    image: radyak/gateway
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - "/home/pirate/conf:/usr/src/conf"
+    environment:
+      - CONF_DIR=/usr/src/conf
+#      - ENV=dev
+
+  test-app:
+    container_name: test-app
+    image: radyak/test-app
+    environment:
+      - PORT=3000
+
+  mongodb:
+    container_name: mongodb
+    image: nonoroazoro/rpi-mongo
+
