@@ -4,7 +4,7 @@
   "description": "Test app to check how requests reach a routed backend",
   "main": "index.js",
   "directories": {},
-  "repository": "https://github.com/radyak/test-app",
+  "repository": "https://github.com/radyak/hshing-platform/tree/master/test-app",
   "scripts": {
     "start": "node index.js"
   },
