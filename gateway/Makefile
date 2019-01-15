@@ -1,5 +1,5 @@
 #!make
-include ../.env
+include ../.build-parameters
 include .build-parameters
 export
 

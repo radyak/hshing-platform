@@ -1,18 +1,14 @@
 var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
-
-var http = require('http');
-var httpProxy = require('http-proxy');
-var proxy = httpProxy.createProxyServer();
-
-var adminRoutes = require("./admin");
+var proxy = require('http-proxy-middleware');
 
 app.use(
   bodyParser.urlencoded({
     extended: false
   })
 );
+
 app.use(bodyParser.raw());
 // app.use(bodyParser.json());
 
@@ -20,23 +16,35 @@ app.use("/isAlive", function (req, res) {
   res.status(200).end();
 });
 
-app.use('/admin', adminRoutes);
+app.use('/admin', require("./admin"));
 
-// Old solution: require("./api-proxy_with-requests.js");
-app.use('/api/:system/*', (req, res) => {
-    var regex = new RegExp(`/api/${req.params.system}/`,'i');
+// TODO: Test
+// TODO: Forward to correct backend system URL
+// For websockets with greenlock, see https://git.coolaj86.com/coolaj86/greenlock-express.js/src/branch/master/examples/websockets.js
+app.use('/api', proxy('/api/**', {
+  // Overwrite target
 
-    var backendUrl = req.originalUrl.replace(regex, '');
-    var system = req.params.system;
-    var port = 3000;
+  router: function(message) {
+    var regex = /\/api\/([a-zA-Z.-]*)\/(.*)/i;
+    var matches = regex.exec(message.url);
+    var host = matches[1];
 
-    var url = `http://${system}:${port}/${backendUrl}`;
+    var backendUrl = `http://${host}:3000`;
 
-    console.log("Forwarding to " + url);
+    console.log(`Redirecting to ${backendUrl}`);
 
-    // Attention: requires app.use(bodyParser.raw())!
-    proxy.web(req, res, {target: url});
-});
+    return `http://${host}:3000`;
+  },
+  // Default backend
+  target: 'http://nonsense:3000',
+  changeOrigin: true,
+  ws: true,
+
+  pathRewrite: {
+    '^/api/[a-zA-Z.-]*/': '' // remove base path,
+  },
+
+}));
 
 app.use("*", function (req, res) {
   res.status(404).send("Invalid URL");
