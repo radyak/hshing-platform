@@ -1,7 +1,6 @@
 var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
-var proxy = require('http-proxy-middleware');
 
 app.use(
   bodyParser.urlencoded({
@@ -9,8 +8,7 @@ app.use(
   })
 );
 
-app.use(bodyParser.raw());
-// app.use(bodyParser.json());
+app.use(bodyParser.json());
 
 app.use("/isAlive", function (req, res) {
   res.status(200).end();
