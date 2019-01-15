@@ -5,14 +5,22 @@ var app = express();
 var expressWs = require("express-ws")(app);
 var bodyParser = require("body-parser");
 
-function getNormalizedReq(req) {
-  return {
+
+function normalizeReq(req) {
+  var normalizedReq = {
     method: req.method,
     url: req.originalUrl,
     headers: req.headers,
     body: req.body
   };
+
+  console.log(`${normalizedReq.method} ${normalizedReq.url}`);
+  console.log("headers:", normalizedReq.headers);
+  console.log("body:", normalizedReq.body);
+
+  return normalizedReq;
 }
+
 
 app.use(
   bodyParser.urlencoded({
@@ -21,20 +29,8 @@ app.use(
 );
 app.use(bodyParser.json());
 
-app.use("/test", function (req, res) {
-  var normalizedReq = getNormalizedReq(req);
-  console.log(`${normalizedReq.method} ${normalizedReq.url}`);
-  console.log("headers:", normalizedReq.headers);
-  console.log("body:", normalizedReq.body);
-
-  res.send(normalizedReq);
-});
-
-app.ws("/test-ws", function(ws, req) {
-  var normalizedReq = getNormalizedReq(req);
-  console.log(`${normalizedReq.method} ${normalizedReq.url}`);
-  console.log("headers:", normalizedReq.headers);
-  console.log("body:", normalizedReq.body);
+app.ws("/ws", function(ws, req) {
+  normalizeReq(req);
 
   ws.on('message', function(msg) {
     console.log("websocket message:", msg);
@@ -43,7 +39,12 @@ app.ws("/test-ws", function(ws, req) {
 });
 
 app.use("*", function (req, res) {
-  res.status(404).send("Invalid URL");
+  var normalizedReq = normalizeReq(req);
+  console.log(`${normalizedReq.method} ${normalizedReq.url}`);
+  console.log("headers:", normalizedReq.headers);
+  console.log("body:", normalizedReq.body);
+
+  res.send(normalizedReq);
 });
 
 app.listen(process.env.PORT || 3000);
