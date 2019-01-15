@@ -1,37 +1,42 @@
-var express = require('express');
-var router = express.Router();
+var proxy = require('http-proxy-middleware');
 
-// 'http-proxy' may not be the best option;
-// try http-proxy-middleware (https://www.npmjs.com/package/http-proxy-middleware, https://github.com/chimurai/http-proxy-middleware)
-var httpProxy = require('http-proxy');
-var proxy = httpProxy.createProxyServer();
+const DEFAULT_PORT = 3000;
 
-router.use('/:system/*', (req, res) => {
-    var regex = new RegExp(`/api/${req.params.system}/`,'i');
+// TODO: Test
+// TODO: Forward to correct backend system URL
+// For websockets with greenlock, see https://git.coolaj86.com/coolaj86/greenlock-express.js/src/branch/master/examples/websockets.js
+var apiProxy = proxy('/api/**', {
+    // Overwrite target
+  
+    router: function(message) {
+      var regex = new RegExp("/api\/([a-zA-Z.-]*)\/(.*)", "i");
+      var matches = regex.exec(message.url);
+      var host = matches[1];
+      var backendUrl = `http://${host}:${DEFAULT_PORT}`;
+      return backendUrl;
+    },
 
-    var backendUrl = req.originalUrl.replace(regex, '');
-    var system = req.params.system;
-    var port = 3000;
+    // Default backend
+    target: 'http://nirvana:3000',
 
-    var url = `http://${system}:${port}/${backendUrl}`;
+    changeOrigin: true,
 
-    console.log("Forwarding http:// to " + url);
+    ws: true,
+  
+    pathRewrite: {
+      // remove base path,
+      '^/api/[a-zA-Z0-9.-]*/': ''
+    },
 
-    // Attention: requires app.use(bodyParser.raw())!
-    proxy.web(req, res, {target: url});
-});
-
-module.exports.web = router;
-
-
-var websocket = function (req, socket, head) {
-    // var system = req.originalUrl;
-    // TODO: Replace!
-    var url = 'http://test-app:3000/test-ws';
-
-    console.log("Forwarding ws:// to " + url);
-
-    proxy.ws(req, socket, head, {target: url});
-}
-
-module.exports.ws = websocket;
+    onError: function(err, req, res) {
+        res.writeHead(502, {
+          "Content-Type": "application/json"
+        })
+        res.end(JSON.stringify({
+          "message": "Bad Gateway"
+        }));
+    }
+  
+  });
+  
+module.exports = apiProxy;
