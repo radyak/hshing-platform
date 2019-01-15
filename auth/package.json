@@ -1,0 +1,18 @@
+{
+  "name": "auth",
+  "version": "0.0.1",
+  "description": "OAuth2 service",
+  "main": "index.js",
+  "directories": {},
+  "repository": "https://github.com/radyak/hshing-platform/tree/master/auth",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "florian.vogel84@gmx.net",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4",
+    "express-oauth-server": "^2.0.0",
+    "mongoose": "^5.4.3"
+  }
+}
