@@ -2,7 +2,17 @@
 
 var express = require("express");
 var app = express();
+var expressWs = require("express-ws")(app);
 var bodyParser = require("body-parser");
+
+function getNormalizedReq(req) {
+  return {
+    method: req.method,
+    url: req.originalUrl,
+    headers: req.headers,
+    body: req.body
+  };
+}
 
 app.use(
   bodyParser.urlencoded({
@@ -12,18 +22,24 @@ app.use(
 app.use(bodyParser.json());
 
 app.use("/test", function (req, res) {
-  console.log(`${req.method} ${req.originalUrl}`);
-  console.log("headers:", req.headers);
-  console.log("body:", req.body);
+  var normalizedReq = getNormalizedReq(req);
+  console.log(`${normalizedReq.method} ${normalizedReq.url}`);
+  console.log("headers:", normalizedReq.headers);
+  console.log("body:", normalizedReq.body);
 
-  var payload = {
-    method: req.method,
-    url: req.originalUrl,
-    headers: req.headers,
-    body: req.body
-  };
+  res.send(normalizedReq);
+});
 
-  res.send(payload);
+app.ws("/test-ws", function(ws, req) {
+  var normalizedReq = getNormalizedReq(req);
+  console.log(`${normalizedReq.method} ${normalizedReq.url}`);
+  console.log("headers:", normalizedReq.headers);
+  console.log("body:", normalizedReq.body);
+
+  ws.on('message', function(msg) {
+    console.log("websocket message:", msg);
+    ws.send(msg);
+  });
 });
 
 app.use("*", function (req, res) {
