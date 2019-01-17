@@ -6,6 +6,7 @@
   "directories": {},
   "repository": "https://github.com/radyak/hshing-platform/tree/master/auth",
   "scripts": {
+    "test": "mocha --recursive",
     "start": "node index.js"
   },
   "author": "florian.vogel84@gmx.net",
@@ -13,6 +14,11 @@
   "dependencies": {
     "express": "^4.16.4",
     "express-oauth-server": "^2.0.0",
-    "mongoose": "^5.4.3"
+    "mongoose": "^5.4.3",
+    "password-hash": "^1.2.2"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0"
   }
 }
