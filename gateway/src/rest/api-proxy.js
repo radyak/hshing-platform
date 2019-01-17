@@ -8,7 +8,7 @@ var apiProxy = proxy('/api/**', {
   
   // Overwrites `target`
     router: function(message) {
-      var regex = new RegExp("/api\/([a-zA-Z.-]*)\/(.*)", "i");
+      var regex = new RegExp("/api\/([a-zA-Z.-]*)\/*(.*)", "i");
       var matches = regex.exec(message.url);
       var host = matches[1];
       var backendUrl = `http://${host}:${DEFAULT_PORT}`;

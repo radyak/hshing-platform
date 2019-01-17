@@ -8,7 +8,8 @@ app.use(
   })
 );
 
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
+app.use(bodyParser.raw());
 
 app.use("/isAlive", function (req, res) {
   res.status(200).end();
