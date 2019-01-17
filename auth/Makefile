@@ -1,5 +1,5 @@
 #!make
-include ../.env
+include ../.build-parameters
 include .build-parameters
 export
 
@@ -24,3 +24,6 @@ auth.run: auth.dev
 auth.deploy: auth.arm32
 	docker tag $(REPO)/$(IMAGE) $(REPO)/$(IMAGE):$(TAG)
 	docker push $(REPO)/$(IMAGE):$(TAG)
+
+auth.test:
+	npm test

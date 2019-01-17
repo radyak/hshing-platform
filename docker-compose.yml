@@ -23,12 +23,14 @@ services:
       context: ./test-app
       args:
         - BASE_IMAGE=node:8
-    ports:
-      - 3000:3000
+    # ports:
+    #   - 3000:3000
     environment:
       - PORT=3000
   
   auth:
+    depends_on:
+      - mongodb
     container_name: auth
     build:
       context: ./auth
@@ -48,5 +50,5 @@ services:
       context: ./mongodb
       args:
         - BASE_IMAGE=mongo
-    # ports:
-    #   - 27017:27017
+    ports:
+      - 27017:27017
