@@ -10,18 +10,6 @@ mongoose.model('OAuthUsers', new Schema({
     required: [true, "Email is required"],
     match: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   },
-  firstname: {
-    type: String,
-    min: [10, "First name is too short"],
-    max: [99, "First name is too long"],
-    required: [true, "First name is required"]
-  },
-  lastname: {
-    type: String,
-    min: [10, "Last name is too short"],
-    max: [99, "Last name is too long"],
-    required: [true, "Last name is required"]
-  },
   password: {
     type: String,
     min: [10, "Password is too short"],

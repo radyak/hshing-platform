@@ -22,7 +22,7 @@ require('./src/persistence/mongodb-connection').then(() => {
     })
   );
   app.use(bodyParser.json());
-  app.use('/user', require('./src/rest/user'));
+  app.use('/users', require('./src/rest/users'));
 
   app.use(app.oauth.authorize());
 

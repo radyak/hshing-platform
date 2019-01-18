@@ -1,9 +1,6 @@
-var mongoose = require('mongoose');
 var express = require('express');
 var router = express.Router();
 var UserService = require("../service/UserService");
-
-var OAuthUsersModel = mongoose.model('OAuthUsers');
 
 router.post('/', (req, res) => {
 
@@ -13,7 +10,7 @@ router.post('/', (req, res) => {
         registration.username,
         registration.email,
         registration.password,
-        rep.passwordRepeat
+        registration.passwordRepeat
     )
     .then(() => {
         res.status(200).send();

@@ -38,22 +38,22 @@ const UserService = {
 
     verifyUser: (username, password) => {
 
-        return new Promise((resolve, reject) => {
-            OAuthUsersModel.findOne({
-                username: username
-            }, (err, user) => {
-                console.log("err", err);
-                console.log("user", user);
-                if (err) {
-                    reject(err);
-                }
-                console.log(`Comparing ${password} and ${user.password}`);
-                if (PasswordHashService.check(password, user.password)) {
-                    resolve();
-                } else {
-                    reject(true);
-                }
-            });
+        return OAuthUsersModel.findOne({
+            username: username
+        })
+        .then((user) => {
+            
+            // TODO: remove!
+            console.log("user", user);
+            console.log(`Comparing ${password} and ${user.password}`);
+
+            if (PasswordHashService.check(password, user.password)) {
+                return user;
+            } else {
+                throw new Error({
+                    message: "No matching user"
+                });
+            }
         });
     }
 
