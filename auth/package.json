@@ -7,7 +7,8 @@
   "repository": "https://github.com/radyak/hshing-platform/tree/master/auth",
   "scripts": {
     "test": "mocha --recursive",
-    "start": "node index.js"
+    "start": "node index.js",
+    "watch": "PORT=3001 nodemon ./index.js localhost"
   },
   "author": "florian.vogel84@gmx.net",
   "license": "ISC",
@@ -19,6 +20,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.9"
   }
 }

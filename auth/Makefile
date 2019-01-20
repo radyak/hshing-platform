@@ -15,7 +15,8 @@ auth.test:
 	npm test
 
 auth.dev:
-	docker build -t $(REPO)/$(IMAGE) --build-arg BASE_IMAGE=node:8 .
+	npm run watch
+	#docker build -t $(REPO)/$(IMAGE) --build-arg BASE_IMAGE=node:8 .
 
 auth.run: auth.dev
 	docker run -p 3000:3000 $(REPO)/$(IMAGE)
