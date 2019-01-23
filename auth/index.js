@@ -23,13 +23,15 @@ require('./src/persistence/mongodb-connection').then(() => {
   );
   app.use(bodyParser.json());
   app.use('/users', require('./src/rest/users'));
+  app.use('/clients', require('./src/rest/clients'));
 
-  app.use(app.oauth.authorize());
+  app.use("/token", app.oauth.token());
+  app.use("/authorize", app.oauth.authorize());
 
-  // app.use("*", function (req, res) {
-  //   console.log("Unmapped path");
-  //   res.status(404).send("Unmapped path");
-  // });
+  app.use("*", function (req, res) {
+    console.log("Unmapped path");
+    res.status(404).send("Unmapped path");
+  });
   
   app.listen(process.env.PORT || 3000);
 

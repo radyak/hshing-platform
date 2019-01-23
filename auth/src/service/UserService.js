@@ -36,17 +36,20 @@ const UserService = {
         });
     },
 
-    verifyUser: (username, password) => {
+    
+    /**
+     * Get user.
+     * required if the password grant
+     * 
+     * TODO: elaborate later
+     */
+    getUserByLogin: (username, password) => {
 
         return OAuthUsersModel.findOne({
             username: username
         })
+        .lean()
         .then((user) => {
-            
-            // TODO: remove!
-            console.log("user", user);
-            console.log(`Comparing ${password} and ${user.password}`);
-
             if (PasswordHashService.check(password, user.password)) {
                 return user;
             } else {

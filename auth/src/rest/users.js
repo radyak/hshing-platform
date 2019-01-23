@@ -12,27 +12,11 @@ router.post('/', (req, res) => {
         registration.password,
         registration.passwordRepeat
     )
-    .then(() => {
-        res.status(200).send();
+    .then((user) => {
+        res.status(200).send(user);
     })
     .catch(err => {
         res.status(400).send(err);
-    });
-    
-});
-
-router.post('/pseudo-login', (req, res) => {
-
-    var login = req.body;
-
-    UserService.verifyUser(login.username, login.password)
-    .then(() => {
-        res.status(204).end();
-    })
-    .catch((err) => {
-        res.status(401).send({
-            message: "Unauthorized"
-        });
     });
     
 });
