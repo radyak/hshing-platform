@@ -7,9 +7,14 @@ require("./app-context");
 AppContext.configService
   .getConfig()
   .then(config => {
-    require("./src/bootstrap/dyndns")(config);
-    require("./src/bootstrap/server")(config);
+    return require("./src/bootstrap/dyndns")(config);
+  }).then(config => {
+    return require("./src/bootstrap/persistence")(config)
+  }).then(config => {
+    return require("./src/bootstrap/oauth")(config);
+  }).then(config => {
+    return require("./src/bootstrap/server")(config);
   })
   .catch(err => {
-    console.error(err);
+    console.error("Error during application startup", err);
   });
