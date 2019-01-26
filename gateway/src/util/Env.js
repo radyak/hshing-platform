@@ -6,14 +6,18 @@ var equalsIgnoreCase = function (envVarName, value) {
   return envVar.trim().toLowerCase() === value;
 };
 
+var isTest = function () {
+  return equalsIgnoreCase("ENV", "test");
+};
 var isDev = function () {
   return equalsIgnoreCase("ENV", "dev");
 };
 var isProd = function () {
-  return !isDev();
+  return (!isTest() && !isDev());
 }
 
 var Env = {
+  isTest: isTest,
   isDev: isDev,
   isProd: isProd
 };
