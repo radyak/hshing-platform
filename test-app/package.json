@@ -6,13 +6,19 @@
   "directories": {},
   "repository": "https://github.com/radyak/hshing-platform/tree/master/test-app",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "watch": "PORT=3001 nodemon ./index.js localhost"
   },
   "author": "florian.vogel84@gmx.net",
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.4",
+    "express-jwt": "^5.3.1",
+    "express-jwt-permissions": "^1.2.3",
     "express-ws": "^4.0.0",
     "simple-get": "^3.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.9"
   }
 }

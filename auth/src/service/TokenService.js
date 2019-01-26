@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var jwt = require('jsonwebtoken');
 
 var OAuthTokensModel = mongoose.model('OAuthTokens');
 
@@ -98,6 +99,35 @@ const TokenService = {
 
       return data;
     });
+  },
+
+
+  /**
+   * Generate a JWT
+   * 
+   * @param client 	{object}  The client associated with the JWT.
+   * @param user   	{object} 	The user associated with the JWT.
+   * @param jwt   	{object} 	The scopes associated with the access token. Can be null.
+   * 
+   * @returns   {string}  The JWT
+   */
+  generateJWT: function(client, user, scope){
+    var payload = {
+      id: user._id
+    };
+
+    var options = {
+      
+      // Numeric:     seconds
+      // String:
+      //    w/ unit:  according to unit
+      //    w/o unit: milliseconds
+      expiresIn: 3600,
+
+      issuer: 'homesweethost'
+    };
+
+    return jwt.sign(payload, 'secret', options);
   },
 
 };

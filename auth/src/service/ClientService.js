@@ -1,11 +1,12 @@
 var mongoose = require('mongoose');
+var randomstring = require("randomstring");
 
 var OAuthClientsModel = mongoose.model('OAuthClients');
 
 
 const ClientsService = {
 
-    createClient: (clientId, clientSecret, redirectUris, grants) => {
+    createClient: (clientId, redirectUris, grants) => {
     
         return new Promise((resolve, reject) => {
 
@@ -13,12 +14,34 @@ const ClientsService = {
 
             var newClient = new OAuthClientsModel({
                 clientId: clientId,
-                clientSecret: clientSecret,
+                clientSecret: randomstring.generate(32),
                 redirectUris: redirectUris,
                 grants: grants
             });
 
             newClient.save((err, client) => {
+                if (err) {
+                    console.error(err);
+                    // TODO: Refactor mongoose validation errors (or custom validation)
+                    reject(err.errors);
+                } else {
+                    console.log(`Created new client`);
+                    resolve(client);
+                }
+            });
+
+        });
+    },
+
+    updateClient: (client, redirectUris, grants) => {
+    
+        return new Promise((resolve, reject) => {
+
+            // TODO: further validations
+            client.redirectUris = redirectUris;
+            client.grants = grants;
+
+            client.save((err, client) => {
                 if (err) {
                     console.error(err);
                     // TODO: Refactor mongoose validation errors (or custom validation)
@@ -54,7 +77,14 @@ const ClientsService = {
             clientId: clientId,
             clientSecret: clientSecret
         })
-        .lean();
+        .lean()
+        .then(client => {
+            if (!client) {
+                return null;
+            }
+            delete client.clientSecret;
+            return client;
+        });
     }
 
 };

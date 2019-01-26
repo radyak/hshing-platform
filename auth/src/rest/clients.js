@@ -9,7 +9,6 @@ router.post('/', (req, res) => {
     // TODO: which fields must be generated?
     ClientService.createClient(
         clientInfo.clientId,
-        clientInfo.clientSecret,
         clientInfo.redirectUris,
         clientInfo.grants
     )

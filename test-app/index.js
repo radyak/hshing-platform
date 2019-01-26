@@ -2,7 +2,12 @@
 
 var express = require("express");
 var app = express();
-var expressWs = require("express-ws")(app);
+
+var jwt = require('express-jwt');
+var jwtPermissions = require('express-jwt-permissions');
+
+require("express-ws")(app);
+
 var bodyParser = require("body-parser");
 
 
@@ -11,7 +16,8 @@ function normalizeReq(req) {
     method: req.method,
     url: req.originalUrl,
     headers: req.headers,
-    body: req.body
+    body: req.body,
+    user: req.user
   };
 
   console.log(`${normalizedReq.method} ${normalizedReq.url}`);
@@ -19,6 +25,15 @@ function normalizeReq(req) {
   console.log("body:", normalizedReq.body);
 
   return normalizedReq;
+}
+
+function debug (req, res) {
+  var normalizedReq = normalizeReq(req);
+  console.log(`${normalizedReq.method} ${normalizedReq.url}`);
+  console.log("headers:", normalizedReq.headers);
+  console.log("body:", normalizedReq.body);
+
+  res.send(normalizedReq);
 }
 
 
@@ -38,14 +53,11 @@ app.ws("/ws", function(ws, req) {
   });
 });
 
-app.use("*", function (req, res) {
-  var normalizedReq = normalizeReq(req);
-  console.log(`${normalizedReq.method} ${normalizedReq.url}`);
-  console.log("headers:", normalizedReq.headers);
-  console.log("body:", normalizedReq.body);
+app.use("/authn-secured", jwt({
+  secret: 'secret'
+}), debug);
 
-  res.send(normalizedReq);
-});
+app.use("*", debug);
 
 app.listen(process.env.PORT || 3000);
 

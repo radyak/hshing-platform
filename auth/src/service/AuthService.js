@@ -1,17 +1,10 @@
-var mongoose = require('mongoose');
-
 var TokenService = require('./TokenService');
 var ClientService = require('./ClientService');
 var UserService = require('./UserService');
 var AuthorizationCodeService = require('./AuthorizationCodeService');
 
 
-// TODO: Generate JWTs
-
 // Optional:
-// generateAccessToken = function(client, user, scope){};
-// generateRefreshToken = function(client, user, scope){};
-// generateAuthorizationCode = function(client, user, scope){};
 // validateScope = function(user, client, scope){};
 
 var AuthService = {
@@ -27,6 +20,21 @@ var AuthService = {
   saveToken: function(token, client, user) {
     return TokenService.saveToken(token, client, user);
   },
+
+  // optional
+  generateAccessToken: function(client, user, scope){
+    return TokenService.generateJWT(client, user, scope);
+  },
+
+  // optional
+  // generateRefreshToken: function(client, user, scope){
+
+  // },
+  
+  // optional
+  // generateAuthorizationCode: function(client, user, scope){
+    
+  // },
 
 
 
