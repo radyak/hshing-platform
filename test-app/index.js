@@ -53,7 +53,7 @@ app.ws("/ws", function(ws, req) {
   });
 });
 
-app.use("/authn-secured", jwt({
+app.use("/secured", jwt({
   secret: 'secret'
 }), debug);
 

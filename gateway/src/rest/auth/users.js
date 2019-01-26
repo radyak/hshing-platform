@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var UserService = require("../service/UserService");
+var UserService = require("../../service/UserService");
 
 router.post('/', (req, res) => {
 

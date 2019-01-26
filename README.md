@@ -28,6 +28,33 @@ To be done ...
 - Router: Forward ports 80 and 443 to the _Home Sweet Host &copy;_
 - _Home Sweet Host &copy;_: see [Host-Setup](./host/README.md)
 
+
+<!--
+Example mermaid sequence diagram
+
+see https://mermaidjs.github.io/sequenceDiagram.html
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Client
+    participant AppBackend
+    participant AuthBackend
+
+    User->>Client: action
+    Client->>AppBackend: BackendCall (not authenticated)
+    activate AppBackend
+    AppBackend->>AppBackend: Check Authentication
+    AppBackend->>Client: Response: not authenticated
+    deactivate AppBackend
+    Client->>User: Display login form
+
+    Note over A,J: A typical interaction
+    J->>A: Great!
+    deactivate J
+```
+-->
+
 ## ToDos
 
 - [x] Install SSL certificate automatically

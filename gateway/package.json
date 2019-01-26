@@ -9,7 +9,8 @@
   "repository": "https://github.com/radyak/hshing-platform/tree/master/gateway",
   "scripts": {
     "test": "mocha --recursive",
-    "start": "node index.js"
+    "start": "node index.js",
+    "watch": "PORT=3001 nodemon ./index.js localhost"
   },
   "author": "florian.vogel84@gmx.net",
   "license": "ISC",
@@ -21,7 +22,12 @@
     "greenlock-express": "^2.5.0",
     "http-proxy-middleware": "^0.19.1",
     "node-cron": "^2.0.3",
-    "simple-get": "^3.0.3"
+    "simple-get": "^3.0.3",
+    "express-oauth-server": "^2.0.0",
+    "jsonwebtoken": "^8.4.0",
+    "mongoose": "^5.4.3",
+    "password-hash": "^1.2.2",
+    "randomstring": "^1.1.5"
   },
   "optionalDependencies": {
     "le-acme-core": "^2.1.4",
@@ -29,6 +35,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.9"
   }
 }

@@ -12,12 +12,14 @@ arm32: prepare.arm32
 	docker build -t $(REPO)/$(IMAGE) --build-arg BASE_IMAGE=arm32v7/node .
 
 test:
+	echo "Testing ..."
 	npm test
 
 dev:
-	docker build -t $(REPO)/$(IMAGE) --build-arg BASE_IMAGE=node:8 .
+	npm run watch
 
-run: dev
+run:
+	docker build -t $(REPO)/$(IMAGE) --build-arg BASE_IMAGE=node:8 .
 	docker run -p 80:80 -p 443:443 -v /home/fvo/tmp/test-mounts:/usr/src/conf -e CONF_DIR=/usr/src/conf -e ENV=dev $(REPO)/$(IMAGE)
 	# On Raspberry PI:
 	# docker run -p 80:80 -p 443:443 -v /home/pirate/conf:/usr/src/conf -e CONF_DIR=/usr/src/conf radyak/gateway

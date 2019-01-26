@@ -1,5 +1,5 @@
 var expect = require("chai").expect;
-var PasswordHashService = require("../src/util/PasswordHashService");
+var PasswordHashService = require("../../src/service/PasswordHashService");
 
 describe("PasswordHashService", function () {
 
