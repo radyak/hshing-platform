@@ -1,6 +1,6 @@
 const greenlock = require("greenlock-express");
-const app = require("../rest/index");
-const Env = require("../util/Env");
+const app = require("../../rest/index");
+const Env = require("../../util/Env");
 
 module.exports = function (config) {
 
