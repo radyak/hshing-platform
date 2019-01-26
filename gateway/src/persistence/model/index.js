@@ -1,4 +1,4 @@
 require("./OAuthClients");
 require("./OAuthTokens");
 require("./OAuthUsers");
-require("./OAuthAuthorizazionCodes");
+require("./OAuthAuthorizationCodes");

@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var OAuthAuthorizazionCodes = mongoose.model('OAuthAuthorizazionCodes');
+var OAuthAuthorizationCodes = mongoose.model('OAuthAuthorizationCodes');
 
 
 const AuthorizationCodeService = {
@@ -25,7 +25,7 @@ const AuthorizationCodeService = {
    * }
    */
     getAuthorizationCode: function(authorizationCode){
-        return OAuthAuthorizazionCodes.findOne({ authorizationCode: authorizationCode }).lean();
+        return OAuthAuthorizationCodes.findOne({ authorizationCode: authorizationCode }).lean();
     },
     
   /**
@@ -55,7 +55,7 @@ const AuthorizationCodeService = {
    * }
    */
     saveAuthorizationCode: function(code, client, user){
-        var authorizationCode = new OAuthAuthorizazionCodes({
+        var authorizationCode = new OAuthAuthorizationCodes({
             authorizationCode: code.authorizationCode,
             expiresAt: code.expiresAt,
             redirectUri: code.redirectUri,
