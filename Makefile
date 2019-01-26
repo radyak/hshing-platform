@@ -11,3 +11,7 @@ deploy-all: cluster-config.deploy
 
 mongoclient:
 	docker run -d -p 3000:3000 --network host mongoclient/mongoclient
+
+loop:
+	#find - -type f -name Makefile -execdir make dev \; 
+	find - -type f -name Makefile -execdir make dev \;

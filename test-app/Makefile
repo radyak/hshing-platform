@@ -1,23 +1,24 @@
 #!make
-include ../.env
+include ../.build-parameters
 include .build-parameters
 export
 
-default: test-app.deploy
+default: deploy
 
 prepare.arm32:
 	docker run --rm --privileged multiarch/qemu-user-static:register --reset
 
-test-app.arm32: prepare.arm32
+arm32: prepare.arm32
 	docker build -t $(REPO)/$(IMAGE) --build-arg BASE_IMAGE=arm32v7/node .
 
-test-app.dev:
-	docker build -t $(REPO)/$(IMAGE) --build-arg BASE_IMAGE=node:8 .
+dev:
+	npm run watch
 
-test-app.run: test-app.dev
+run:
+	docker build -t $(REPO)/$(IMAGE) --build-arg BASE_IMAGE=node:8 .
 	docker run -p 3000:3000 -e PORT=3000 $(REPO)/$(IMAGE)
 	# On Raspberry PI: docker run radyak/test-app
 
-test-app.deploy: test-app.arm32
+deploy: arm32
 	docker tag $(REPO)/$(IMAGE) $(REPO)/$(IMAGE):$(TAG)
 	docker push $(REPO)/$(IMAGE):$(TAG)
