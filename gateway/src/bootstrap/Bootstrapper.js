@@ -8,9 +8,15 @@ module.exports = {
             const component = components[i];
             currentPromise = currentPromise
                 .then((config) => {
-                    console.log("Loading " + component);
                     return require(`./components/${component}`)(config)
-                    .then(() => {return config});
+                    .then(() => {
+                        console.log(`Component ${component} loaded`);
+                        return config
+                    });
+                })
+                .catch(err => {
+                    console.log(`Error while loading component ${component}`, err);
+                    throw err;
                 });
         }
 
