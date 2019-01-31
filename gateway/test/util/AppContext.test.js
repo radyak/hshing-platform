@@ -1,169 +1,167 @@
-var expect = require("chai").expect;
-var AppContext = require("../../src/util/AppContext");
-var TypeUtil = require("../../src/util/TypeUtil");
+var expect = require('chai').expect
+var AppContext = require('../../src/util/AppContext')
+var TypeUtil = require('../../src/util/TypeUtil')
 
-describe("AppContext", function () {
-
-  it("should throw an Error when registering components with invalid names", function (done) {
-    var obj = { key: "value" };
+describe('AppContext', function () {
+  it('should throw an Error when registering components with invalid names', function (done) {
+    var obj = { key: 'value' }
     try {
-      AppContext.register(" ", obj);
-      done("Should not have accepted white-space-only string as name");
+      AppContext.register(' ', obj)
+      done('Should not have accepted white-space-only string as name')
     } catch (e) {
-      done();
+      done()
     }
-  });
+  })
 
-  it("should throw an Error when registering components with protected names", function (done) {
-    var obj = { key: "value" };
+  it('should throw an Error when registering components with protected names', function (done) {
+    var obj = { key: 'value' }
     try {
-      AppContext.register("register", obj);
-      done("Should not have accepted a protected name");
+      AppContext.register('register', obj)
+      done('Should not have accepted a protected name')
     } catch (e) {
-      done();
+      done()
     }
-  });
+  })
 
-  it("can register and get components", function () {
-    var obj = { key: "value" };
-    AppContext.register("something", obj);
-    var objFromContext = AppContext.something;
-    expect(objFromContext).to.deep.equal(obj);
+  it('can register and get components', function () {
+    var obj = { key: 'value' }
+    AppContext.register('something', obj)
+    var objFromContext = AppContext.something
+    expect(objFromContext).to.deep.equal(obj)
 
-    var sameObjFromContext = AppContext["something"];
-    expect(sameObjFromContext).to.deep.equal(obj);
-  });
+    var sameObjFromContext = AppContext['something']
+    expect(sameObjFromContext).to.deep.equal(obj)
+  })
 
-  it("can register and get primitives", function () {
-    AppContext.register("someString", "some string");
-    AppContext.register("someNumber", 5.1);
-    AppContext.register("someBoolean", true);
+  it('can register and get primitives', function () {
+    AppContext.register('someString', 'some string')
+    AppContext.register('someNumber', 5.1)
+    AppContext.register('someBoolean', true)
 
-    expect(AppContext.someString).to.equal("some string");
-    expect(AppContext.someNumber).to.equal(5.1);
-    expect(AppContext.someBoolean).to.equal(true);
-  });
+    expect(AppContext.someString).to.equal('some string')
+    expect(AppContext.someNumber).to.equal(5.1)
+    expect(AppContext.someBoolean).to.equal(true)
+  })
 
-  it("should throw an Error when getting non-registered components", function (done) {
+  it('should throw an Error when getting non-registered components', function (done) {
+    var shouldNeverBeAssigned
     try {
-      AppContext.wrongName;
-      done("Should not have returned non-registered component");
+      shouldNeverBeAssigned = AppContext.wrongName
+      done('Should not have returned non-registered component')
     } catch (e) {
       expect(e.toString()).to.equal(
         "Error: No component with name 'wrongName' / key 'wrongname' present in AppContext"
-      );
-      done();
+      )
+      expect(shouldNeverBeAssigned).to.equal(undefined)
+      done()
     }
-  });
+  })
 
-  describe("dependency injection", function () {
-
-    function Battery() {
+  describe('dependency injection', function () {
+    function Battery () {
       this.getEnergy = function () {
-        return "battery";
-      };
+        return 'battery'
+      }
     }
 
     class SolarPanel {
-      getEnergy() {
-        return "solar panel";
+      getEnergy () {
+        return 'solar panel'
       };
     }
 
-    function Flashlight(battery) {
-      this.battery = battery;
+    function Flashlight (battery) {
+      this.battery = battery
 
       this.on = function () {
         if (!this.battery) {
-          throw new Error("No battery inserted");
+          throw new Error('No battery inserted')
         }
-        var source = this.battery.getEnergy();
-        return `Flashlight runs with ${source}`;
-      };
+        var source = this.battery.getEnergy()
+        return `Flashlight runs with ${source}`
+      }
     }
 
-    it("should not work with Vanilla JS", function (done) {
-
-      var flashlightWithoutDI = new Flashlight();
+    it('should not work with Vanilla JS', function (done) {
+      var flashlightWithoutDI = new Flashlight()
       try {
-        flashlightWithoutDI.on();
-        done("Should have thrown an Error");
+        flashlightWithoutDI.on()
+        done('Should have thrown an Error')
       } catch (e) {
-        done();
+        done()
       }
-    });
+    })
 
-    it("should inject dependencies automatically (function class definition)", function () {
+    it('should inject dependencies automatically (function class definition)', function () {
+      AppContext.register('Battery', Battery)
+      AppContext.register('Flashlight', Flashlight)
 
-      AppContext.register("Battery", Battery);
-      AppContext.register("Flashlight", Flashlight);
+      expect(TypeUtil.isObject(AppContext.Battery)).to.equal(true)
+      expect(TypeUtil.isObject(AppContext.Flashlight)).to.equal(true)
 
-      expect(TypeUtil.isObject(AppContext.Battery)).to.be.true;
-      expect(TypeUtil.isObject(AppContext.Flashlight)).to.be.true;
+      expect(AppContext.Flashlight.on()).to.equal('Flashlight runs with battery')
+    })
 
-      expect(AppContext.Flashlight.on()).to.equal("Flashlight runs with battery");
-    });
+    it('should inject dependencies automatically (new class definition)', function () {
+      AppContext.register('Battery', SolarPanel)
+      AppContext.register('Flashlight', Flashlight)
 
-    it("should inject dependencies automatically (new class definition)", function () {
+      expect(TypeUtil.isObject(AppContext.Battery)).to.equal(true)
+      expect(TypeUtil.isObject(AppContext.Flashlight)).to.equal(true)
 
-      AppContext.register("Battery", SolarPanel);
-      AppContext.register("Flashlight", Flashlight);
+      expect(AppContext.Flashlight.on()).to.equal('Flashlight runs with solar panel')
+    })
 
-      expect(TypeUtil.isObject(AppContext.Battery)).to.be.true;
-      expect(TypeUtil.isObject(AppContext.Flashlight)).to.be.true;
-
-      expect(AppContext.Flashlight.on()).to.equal("Flashlight runs with solar panel");
-    });
-
-    it("should throw Error on unsatisfied dependency", function (done) {
-
-      function Flashlight(battery, config) {
-        this.battery = battery;
-        this.config = config;
+    it('should throw Error on unsatisfied dependency', function (done) {
+      function Flashlight (battery, config) {
+        this.battery = battery
+        this.config = config
 
         this.on = function () {
           if (!this.battery) {
-            throw new Error("No battery inserted");
+            throw new Error('No battery inserted')
           }
-          var source = this.battery.getEnergy();
-          return `Flashlight runs with ${source} and config key '${this.config.key}'`;
-        };
+          var source = this.battery.getEnergy()
+          return `Flashlight runs with ${source} and config key '${this.config.key}'`
+        }
       }
-      AppContext.register("Battery", SolarPanel);
-      AppContext.register("Flashlight", Flashlight);
+      AppContext.register('Battery', SolarPanel)
+      AppContext.register('Flashlight', Flashlight)
 
+      var flashlight
       try {
-        AppContext.Flashlight;
-        done("Should have thrown an Error");
+        flashlight = AppContext.Flashlight
+        done('Should have thrown an Error')
       } catch (e) {
-        // nothing to do here, continue
+        expect(e.toString()).to.equal(
+          "Error: No component with name 'config' / key 'config' present in AppContext"
+        )
+        expect(flashlight).to.equal(undefined)
       }
 
-      AppContext.register("config", { key: "value" });
+      AppContext.register('config', { key: 'value' })
 
-      expect(AppContext.Flashlight.on()).to.equal("Flashlight runs with solar panel and config key 'value'");
+      expect(AppContext.Flashlight.on()).to.equal("Flashlight runs with solar panel and config key 'value'")
 
-      done();
-    });
+      done()
+    })
 
-    it("should create always the same instances", function () {
+    it('should create always the same instances', function () {
+      AppContext.register('Battery', Battery)
+      AppContext.register('Flashlight', Flashlight)
 
-      AppContext.register("Battery", Battery);
-      AppContext.register("Flashlight", Flashlight);
+      expect(AppContext.Battery).to.equal(AppContext.Battery)
+      expect(AppContext.Flashlight).to.equal(AppContext.Flashlight)
+    })
 
-      expect(AppContext.Battery).to.equal(AppContext.Battery);
-      expect(AppContext.Flashlight).to.equal(AppContext.Flashlight);
-    });
+    it('should ignore case', function () {
+      AppContext.register('bAtTeRy', Battery)
+      AppContext.register('fLaShLiGhT', Flashlight)
 
-    it("should ignore case", function () {
+      expect(AppContext.BATtery).to.equal(AppContext.batTERY)
+      expect(AppContext.FLASHlight).to.equal(AppContext.FlashLIGHT)
 
-      AppContext.register("bAtTeRy", Battery);
-      AppContext.register("fLaShLiGhT", Flashlight);
-
-      expect(AppContext.BATtery).to.equal(AppContext.batTERY);
-      expect(AppContext.FLASHlight).to.equal(AppContext.FlashLIGHT);
-
-      expect(AppContext.flaSHLight.on()).to.equal("Flashlight runs with battery");
-    });
-  });
-});
+      expect(AppContext.flaSHLight.on()).to.equal('Flashlight runs with battery')
+    })
+  })
+})

@@ -1,14 +1,17 @@
 # _Home Sweet Host &copy;_ - Main Platform
 
-The Management Platform clusters the core functionality of a _Home Sweet Host &copy;_. It is separated into the components
+The Main Platform clusters the core functionality of a _Home Sweet Host &copy;_. It is separated into the components
 
-- Management
+- Gateway
 - Persistence
 
-## Component _Management_
+## Component _Gateway_
 
 The main roles it serves as are:
 
+- Network Entrypoint:
+  - registering IP at DNS
+  - establishing and terminating HTTPS
 - API Gateway:
   - routing
   - authN/authZ
@@ -59,12 +62,20 @@ sequenceDiagram
 
 - [x] Install SSL certificate automatically
 - [x] Register domain at DNS provider
-- [ ] Require an main configuration before _Management_ server start
+- [ ] Require an main configuration before server start
   - [x] encrypted
   - [ ] validated
 - [ ] Use a global context to manage subcomponents
 - [ ] Use _core components_:
   - [ ] Persistence: _MongoDB_
-  - [ ] Container management: _Portainer_
 - [ ] _Start docker-compose_ on machine startup
 - [ ] _Automatic port forwardings_ on connected router (UPnP? TR-069?)
+- [ ] Standard _formatting_ (Standard JS, https://standardjs.com/)
+- [ ] Add/complete _JsDoc_
+- [ ] Leverage `AppContext` to bootstrap components
+- [ ] _Tests_ (use Mock MongoDB)
+- [ ] _Validations_/central model
+- [ ] Develop routine for _first startup_ of unconfigured cluster
+- [ ] Develop rock-solid _management for config & secrets_ (Docker Swarm?)
+- [ ] _App management_ (aka container management; Portainer)
+- [ ] _Extend readme_, add diagrams for most important flows

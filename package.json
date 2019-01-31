@@ -1,0 +1,38 @@
+{
+  "name": "hshing-platform",
+  "version": "1.0.0",
+  "description": "The Management Platform clusters the core functionality of a _Home Sweet Host &copy;_. It is separated into the components",
+  "main": "index.js",
+  "dependencies": {
+    "bson-objectid": "^1.2.4",
+    "clone": "^2.1.2",
+    "debug": "^2.6.9",
+    "deep-equal": "^1.0.1",
+    "lodash": "^4.17.11",
+    "modifyjs": "^0.3.1",
+    "mongo-mock": "^3.4.0",
+    "ms": "^2.0.0",
+    "object-assign-deep": "^0.4.0",
+    "sift": "^3.3.12"
+  },
+  "devDependencies": {
+    "standard": "^12.0.1"
+  },
+  "standard": {
+    "env": [ "mocha" ]
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "standard --fix --verbose"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/radyak/hshing-platform.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/radyak/hshing-platform/issues"
+  },
+  "homepage": "https://github.com/radyak/hshing-platform#readme"
+}

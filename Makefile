@@ -15,3 +15,6 @@ mongoclient:
 loop:
 	#find - -type f -name Makefile -execdir make dev \; 
 	find - -type f -name Makefile -execdir make dev \;
+
+lint:
+	npm run lint

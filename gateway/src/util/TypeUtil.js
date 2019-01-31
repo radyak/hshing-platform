@@ -1,22 +1,22 @@
 var TypeUtil = {
   isBoolean: function (test) {
-    return typeof test === "boolean";
+    return typeof test === 'boolean'
   },
   isFunction: function (test) {
-    return typeof test === "function";
+    return typeof test === 'function'
   },
   isNumber: function (test) {
-    return typeof test === "number";
+    return typeof test === 'number'
   },
   isString: function (test) {
-    return typeof test === "string";
+    return typeof test === 'string'
   },
   isObject: function (test) {
-    return !!test && Object.prototype.toString.call(test) === '[object Object]';
+    return !!test && Object.prototype.toString.call(test) === '[object Object]'
   },
   isArray: function (test) {
-    return !!test && Object.prototype.toString.call(test) === '[object Array]';
+    return !!test && Object.prototype.toString.call(test) === '[object Array]'
   }
-};
+}
 
-module.exports = TypeUtil;
+module.exports = TypeUtil

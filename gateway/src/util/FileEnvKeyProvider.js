@@ -1,9 +1,9 @@
-var FileIO = require("./FileIO");
+var FileIO = require('./FileIO')
 
-function FileEnvKeyProvider(keyFile) {
+function FileEnvKeyProvider (keyFile) {
   this.get = function () {
-    return FileIO.read(keyFile);
-  };
+    return FileIO.read(keyFile)
+  }
 }
 
-module.exports = FileEnvKeyProvider;
+module.exports = FileEnvKeyProvider

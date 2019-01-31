@@ -1,4 +1,4 @@
-require("./OAuthClients");
-require("./OAuthTokens");
-require("./OAuthUsers");
-require("./OAuthAuthorizationCodes");
+require('./OAuthClients')
+require('./OAuthTokens')
+require('./OAuthUsers')
+require('./OAuthAuthorizationCodes')

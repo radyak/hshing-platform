@@ -1,19 +1,19 @@
 var SimpleParamCheck = {
-  checkForFalsy: function(object) {
-    var invalidFields = [];
+  checkForFalsy: function (object) {
+    var invalidFields = []
     for (var key in object) {
-      var value = object[key];
+      var value = object[key]
       if (!value) {
-        invalidFields.push(key);
+        invalidFields.push(key)
       }
     }
     if (invalidFields.length > 0) {
-      invalidFieldsString = invalidFields.join(", ");
+      var invalidFieldsString = invalidFields.join(', ')
       throw new Error(
         `The following properties are invalid (falsy): ${invalidFieldsString}`
-      );
+      )
     }
   }
-};
+}
 
-module.exports = SimpleParamCheck;
+module.exports = SimpleParamCheck

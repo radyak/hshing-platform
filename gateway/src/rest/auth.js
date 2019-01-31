@@ -1,51 +1,47 @@
-var express = require('express');
-var router = express.Router();
-var ClientService = require('../service/ClientService');
-var UserService = require("../service/UserService");
+var express = require('express')
+var router = express.Router()
+var ClientService = require('../service/ClientService')
+var UserService = require('../service/UserService')
 
-var AppContext = require("../util/AppContext");
+var AppContext = require('../util/AppContext')
 
-var oauth = AppContext.OAuthServer;
+var oauth = AppContext.OAuthServer
 
 router.post('/clients', (req, res) => {
+  var clientInfo = req.body
 
-    var clientInfo = req.body;
-
-    // TODO: which fields must be generated?
-    ClientService.createClient(
-        clientInfo.clientId,
-        clientInfo.redirectUris,
-        clientInfo.grants
-    )
+  // TODO: which fields must be generated?
+  ClientService.createClient(
+    clientInfo.clientId,
+    clientInfo.redirectUris,
+    clientInfo.grants
+  )
     .then((client) => {
-        res.status(200).send(client);
+      res.status(200).send(client)
     })
     .catch(err => {
-        res.status(400).send(err);
-    });
-    
-});
+      res.status(400).send(err)
+    })
+})
 
 router.post('/users', (req, res) => {
+  var registration = req.body
 
-    var registration = req.body;
-
-    UserService.createUser(
-        registration.username,
-        registration.email,
-        registration.password,
-        registration.passwordRepeat
-    )
+  UserService.createUser(
+    registration.username,
+    registration.email,
+    registration.password,
+    registration.passwordRepeat
+  )
     .then((user) => {
-        res.status(200).send(user);
+      res.status(200).send(user)
     })
     .catch(err => {
-        res.status(400).send(err);
-    });
-    
-});
+      res.status(400).send(err)
+    })
+})
 
-router.use("/token", oauth.token());
-router.use("/authorize", oauth.authorize());
+router.use('/token', oauth.token())
+router.use('/authorize', oauth.authorize())
 
-module.exports = router;
+module.exports = router
