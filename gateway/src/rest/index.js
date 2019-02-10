@@ -17,6 +17,7 @@ app.use('/isalive', function (req, res) {
 app.use('/api', require('./api-proxy'))
 app.use('/admin', bodyParser.json(), require('./admin'))
 app.use('/auth', bodyParser.json(), require('./auth'))
+app.use('/containers', bodyParser.json(), require('./containers'))
 app.use('*', function (req, res) {
   res.status(404).send('Invalid URL')
 })
