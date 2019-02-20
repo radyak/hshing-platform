@@ -8,6 +8,7 @@ require('./app-context')
 Bootstrapper.bootstrap(
   AppContext.configService.getConfig(),
   [
+    'usb',
     'dyndns',
     'persistence',
     'oauth',

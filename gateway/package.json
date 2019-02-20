@@ -17,17 +17,18 @@
   "dependencies": {
     "bottlejs": "^1.7.1",
     "deepmerge": "^3.0.0",
+    "drivelist": "^7.0.1",
     "express": "^4.16.4",
+    "express-oauth-server": "^2.0.0",
     "external-ip": "^2.1.1",
     "greenlock-express": "^2.5.0",
     "http-proxy-middleware": "^0.19.1",
-    "node-cron": "^2.0.3",
-    "simple-get": "^3.0.3",
-    "express-oauth-server": "^2.0.0",
     "jsonwebtoken": "^8.4.0",
     "mongoose": "^5.4.3",
+    "node-cron": "^2.0.3",
     "password-hash": "^1.2.2",
-    "randomstring": "^1.1.5"
+    "randomstring": "^1.1.5",
+    "simple-get": "^3.0.3"
   },
   "optionalDependencies": {
     "le-acme-core": "^2.1.4",

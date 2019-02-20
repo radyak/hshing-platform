@@ -1,4 +1,4 @@
-# _Home Sweet Host &copy;_ - Host Set-Up
+# _Home Sweet Host_ - Host Set-Up
 
 ## SSH
 
@@ -49,3 +49,68 @@
       X11Forwarding no
       PermitEmptyPasswords no
       ```
+
+## External USB Drives
+
+At first, new USB drives must be formatted.
+
+```
+# Find USB drive
+df -h   # yields e.g. /dev/sdb1
+
+# Unmount USB drive
+umount /dev/sdb1
+
+# Format in ext4 format
+sudo mkfs.ext4 -F /dev/sdb1
+```
+
+
+Then, mount USB drives to a static directory:
+
+### 1. Find device:
+
+```bash
+sudo fdisk -l
+```
+
+### 2. Make mount directory:
+
+```bash
+sudo mkdir /media/usb-drive
+```
+
+### 3. Mount USB device to directory:
+
+```bash
+sudo mount /dev/sda1 /media/usb-drive
+```
+
+### 4. Check mount:
+
+```bash
+mount | grep sda1
+```
+
+Drives can also be mounted statically by adding the line
+```bash
+/dev/sda1       /media/usb-drive           vfat    defaults        0       0 
+```
+to the file `/etc/fstab`. However, such drive names - in this example `sda1` - are not a unique identifier for an individual USB drive. To mount it by its UUID, run
+
+```bash
+ls -l /dev/disk/by-uuid/*
+```
+
+which shows e.g.
+
+```
+...
+dev/disk/by-uuid/C896-14A6 -> ../../sdb1
+```
+
+i.e. add the following line to `/etc/fstab`:
+
+```
+/dev/disk/by-uuid/C896-14A6    /media/usb-drive         vfat   0   0
+```

@@ -13,6 +13,7 @@ services:
     ports:
       - 80:80
       - 443:443
+    privileged: true
     volumes:
       - "/home/fvo/tmp/test-mounts:/usr/src/conf"
       - "/var/run/docker.sock:/var/run/docker.sock"
