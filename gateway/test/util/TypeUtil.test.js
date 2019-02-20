@@ -60,6 +60,17 @@ describe('TypeUtils', function () {
     })
   })
 
+  it('should recognize async functions', function () {
+    var test = async function() {}
+    expect(TypeUtil.isArray(test)).to.equal(false)
+    expect(TypeUtil.isBoolean(test)).to.equal(false)
+    expect(TypeUtil.isAsyncFunction(test)).to.equal(true)
+    expect(TypeUtil.isFunction(test)).to.equal(true)
+    expect(TypeUtil.isNumber(test)).to.equal(false)
+    expect(TypeUtil.isObject(test)).to.equal(false)
+    expect(TypeUtil.isString(test)).to.equal(false)
+  })
+
   it('should recognize booleans', function () {
     var test = false
     expect(TypeUtil.isArray(test)).to.equal(false)

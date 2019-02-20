@@ -1,9 +1,14 @@
+const AsyncFunction = (async () => {}).constructor;
+
 var TypeUtil = {
   isBoolean: function (test) {
     return typeof test === 'boolean'
   },
   isFunction: function (test) {
     return typeof test === 'function'
+  },
+  isAsyncFunction: function (test) {
+    return test instanceof AsyncFunction
   },
   isNumber: function (test) {
     return typeof test === 'number'
