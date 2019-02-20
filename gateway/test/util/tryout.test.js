@@ -13,30 +13,38 @@ describe('Try out', function () {
     match = regex.exec('/api/mongoclient')
     expect(match[1]).to.equal('mongoclient')
     expect(match[2]).to.equal('')
-  });
+  })
 
-  it("Using a Promise with async/await that resolves successfully", async function() {
+  it("Using a Promise with async/await that resolves successfully", function(done) {
     
     var testPromise = new Promise(function(resolve, reject) {
         setTimeout(function() {
-            resolve("works");
-        }, 200);
-    });
+            resolve("works")
+        }, 200)
+    })
 
-    var result = await testPromise;
+    var asyncFunction = async function() {
+      var result = await testPromise
+      expect(result).to.equal("works")
+      done()
+    }
 
-    expect(result).to.equal("works");
-  });
+    asyncFunction()
+  })
 
-  it("Using a normal function with await works normally", async function() {
+  it("Using a normal function with await works normally", function(done) {
     
-    var testPromise = function() {
-      return "works";
-    };
+    var testFunction = function() {
+      return "works"
+    }
 
-    var result = await testPromise();
+    var asyncFunction = async function() {
+      var result = await testFunction()
+      expect(result).to.equal("works")
+      done()
+    }
 
-    expect(result).to.equal("works");
-  });
+    asyncFunction()
+  })
 
 })
