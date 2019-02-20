@@ -1,7 +1,7 @@
 {
   "name": "gateway",
   "version": "0.0.1",
-  "description": "The Gateway is the entry point for each _Home Sweet Host &copy;_",
+  "description": "The gateway and core component for a Home Sweet Host",
   "main": "index.js",
   "directories": {
     "test": "test/*"
