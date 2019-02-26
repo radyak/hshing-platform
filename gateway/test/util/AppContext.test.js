@@ -43,6 +43,30 @@ describe('AppContext', function () {
     expect(AppContext.someBoolean).to.equal(true)
   })
 
+  it('can register and get Promises', function (done) {
+    AppContext.register('somePromise', new Promise((resolve, reject) => {
+      setTimeout(() => resolve(3), 100)
+    }))
+
+    AppContext.somePromise.then(value => {
+      expect(value).to.equal(3)
+      done()
+    })
+  })
+
+  it('can register and get Promise returning functions', function (done) {
+    AppContext.register('somePromise', () => {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => resolve(5), 100)
+      })
+    })
+
+    AppContext.somePromise.then(value => {
+      expect(value).to.equal(5)
+      done()
+    })
+  })
+
   it('should throw an Error when getting non-registered components', function (done) {
     var shouldNeverBeAssigned
     try {
@@ -110,6 +134,37 @@ describe('AppContext', function () {
       expect(TypeUtil.isObject(AppContext.Flashlight)).to.equal(true)
 
       expect(AppContext.Flashlight.on()).to.equal('Flashlight runs with solar panel')
+    })
+
+    it('should inject dependencies automatically (provider function definition)', function () {
+      AppContext.register('Battery', () => {
+        return new Battery()
+      })
+      AppContext.register('Flashlight', function (Battery) {
+        return new Flashlight(Battery)
+      })
+
+      expect(TypeUtil.isObject(AppContext.Battery)).to.equal(true)
+      expect(TypeUtil.isObject(AppContext.Flashlight)).to.equal(true)
+
+      expect(AppContext.Flashlight.on()).to.equal('Flashlight runs with battery')
+    })
+
+    it('should inject dependencies automatically (provider function definition with promises)', function (done) {
+      AppContext.register('Battery', () => {
+        return new Promise((resolve, reject) => setTimeout(() => resolve(new Battery()), 100))
+      })
+      AppContext.register('Flashlight', function (Battery) {
+        return Promise.all([Battery]).then((values) => {
+          var battery = values[0]
+          return new Flashlight(battery)
+        })
+      })
+
+      AppContext.Flashlight.then((flashlight) => {
+        expect(flashlight.on()).to.equal('Flashlight runs with battery')
+        done()
+      })
     })
 
     it('should throw Error on unsatisfied dependency', function (done) {

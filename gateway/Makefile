@@ -12,8 +12,10 @@ arm32: prepare.arm32
 	docker build -t $(REPO)/$(IMAGE) --build-arg BASE_IMAGE=arm32v7/node .
 
 tests:
-	echo "Testing ..."
 	npm test
+
+tests.dev:
+	npm test -- -w
 
 dev:
 	npm run watch

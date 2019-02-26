@@ -28,14 +28,22 @@ var AppContext = new Proxy(Context, {
 })
 
 var instantiate = function (component) {
-  var dependencies = [null]
+  var dependencies = []
   var dependencyNames = getArgs(component)
   for (var i in dependencyNames) {
     var dependencyName = dependencyNames[i]
     dependencies.push(AppContext[dependencyName])
   }
-  var instace = new (Function.prototype.bind.apply(component, dependencies))()
-  return instace
+  var instance
+  try {
+    instance = new (Function.prototype.bind.apply(component, [null, ...dependencies]))()
+  } catch (e) {
+    // TODO: should e.message be checked for 'Function.prototype.bind.apply(...) is not a constructor'?
+    // console.error(e.message)
+
+    instance = component.apply(null, dependencies)
+  }
+  return instance
 }
 
 AppContext.register = function (name, component) {
