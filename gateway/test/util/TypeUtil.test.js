@@ -12,6 +12,7 @@ describe('TypeUtils', function () {
       expect(TypeUtil.isNumber(object)).to.equal(false)
       expect(TypeUtil.isObject(object)).to.equal(true)
       expect(TypeUtil.isString(object)).to.equal(false)
+      expect(TypeUtil.isClass(object)).to.equal(false)
     })
 
     it('should recognize objects created with class definition', function () {
@@ -23,6 +24,7 @@ describe('TypeUtils', function () {
       expect(TypeUtil.isNumber(object)).to.equal(false)
       expect(TypeUtil.isObject(object)).to.equal(true)
       expect(TypeUtil.isString(object)).to.equal(false)
+      expect(TypeUtil.isClass(object)).to.equal(false)
     })
 
     it('should recognize objects created with direct definition', function () {
@@ -33,6 +35,7 @@ describe('TypeUtils', function () {
       expect(TypeUtil.isObject(object)).to.equal(true)
       expect(TypeUtil.isNumber(object)).to.equal(false)
       expect(TypeUtil.isString(object)).to.equal(false)
+      expect(TypeUtil.isClass(object)).to.equal(false)
     })
   })
 
@@ -46,6 +49,7 @@ describe('TypeUtils', function () {
       expect(TypeUtil.isNumber(SomeFunction)).to.equal(false)
       expect(TypeUtil.isObject(SomeFunction)).to.equal(false)
       expect(TypeUtil.isString(SomeFunction)).to.equal(false)
+      expect(TypeUtil.isClass(SomeFunction)).to.equal(false)
     })
 
     it('should recognize class definitions as functions', function () {
@@ -57,6 +61,7 @@ describe('TypeUtils', function () {
       expect(TypeUtil.isObject(ClassObjectDefinition)).to.equal(false)
       expect(TypeUtil.isNumber(ClassObjectDefinition)).to.equal(false)
       expect(TypeUtil.isString(ClassObjectDefinition)).to.equal(false)
+      expect(TypeUtil.isClass(ClassObjectDefinition)).to.equal(true)
     })
   })
 
@@ -69,6 +74,7 @@ describe('TypeUtils', function () {
     expect(TypeUtil.isNumber(test)).to.equal(false)
     expect(TypeUtil.isObject(test)).to.equal(false)
     expect(TypeUtil.isString(test)).to.equal(false)
+    expect(TypeUtil.isClass(test)).to.equal(false)
   })
 
   it('should recognize booleans', function () {
@@ -79,6 +85,7 @@ describe('TypeUtils', function () {
     expect(TypeUtil.isNumber(test)).to.equal(false)
     expect(TypeUtil.isObject(test)).to.equal(false)
     expect(TypeUtil.isString(test)).to.equal(false)
+    expect(TypeUtil.isClass(test)).to.equal(false)
   })
 
   it('should recognize strings', function () {
@@ -89,6 +96,7 @@ describe('TypeUtils', function () {
     expect(TypeUtil.isNumber(test)).to.equal(false)
     expect(TypeUtil.isObject(test)).to.equal(false)
     expect(TypeUtil.isString(test)).to.equal(true)
+    expect(TypeUtil.isClass(test)).to.equal(false)
   })
 
   it('should recognize numbers', function () {
@@ -99,6 +107,7 @@ describe('TypeUtils', function () {
     expect(TypeUtil.isNumber(test)).to.equal(true)
     expect(TypeUtil.isObject(test)).to.equal(false)
     expect(TypeUtil.isString(test)).to.equal(false)
+    expect(TypeUtil.isClass(test)).to.equal(false)
   })
 
   it('should recognize arrays', function () {
@@ -109,6 +118,7 @@ describe('TypeUtils', function () {
     expect(TypeUtil.isNumber(test)).to.equal(false)
     expect(TypeUtil.isObject(test)).to.equal(false)
     expect(TypeUtil.isString(test)).to.equal(false)
+    expect(TypeUtil.isClass(test)).to.equal(false)
   })
 
   it('should recognize null as not anything', function () {
@@ -119,6 +129,7 @@ describe('TypeUtils', function () {
     expect(TypeUtil.isNumber(test)).to.equal(false)
     expect(TypeUtil.isObject(test)).to.equal(false)
     expect(TypeUtil.isString(test)).to.equal(false)
+    expect(TypeUtil.isClass(test)).to.equal(false)
   })
 
   it('should recognize undefined as not anything', function () {
@@ -129,5 +140,6 @@ describe('TypeUtils', function () {
     expect(TypeUtil.isNumber(test)).to.equal(false)
     expect(TypeUtil.isObject(test)).to.equal(false)
     expect(TypeUtil.isString(test)).to.equal(false)
+    expect(TypeUtil.isClass(test)).to.equal(false)
   })
 })

@@ -10,6 +10,9 @@ var TypeUtil = {
   isAsyncFunction: function (test) {
     return test instanceof AsyncFunction
   },
+  isClass(v) {
+    return typeof v === 'function' && /^\s*class\s+/.test(v.toString());
+  },
   isNumber: function (test) {
     return typeof test === 'number'
   },
