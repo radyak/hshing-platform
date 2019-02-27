@@ -15,6 +15,30 @@ describe('Try out', function () {
     expect(match[2]).to.equal('')
   })
 
+  it('function argument extraction', function () {
+    var regex = /([function|constructor]\s*)?.*?\(([^)]*)\)/
+    var testFunction = function (a, b, c) {
+    }
+    var matches1 = testFunction.toString().match(regex)
+    expect(matches1[2]).to.equal('a, b, c')
+
+
+    var testArrowFunction = (a, b, c) => {
+
+    }
+    var matches2 = testArrowFunction.toString().match(regex)
+    expect(matches2[2]).to.equal('a, b, c')
+
+
+    class testClass {
+      constructor(a, b, c) {
+
+      }
+    }
+    var matches3 = testClass.toString().match(regex)
+    expect(matches3[2]).to.equal('a, b, c')
+  })
+
   it("Using a Promise with async/await that resolves successfully", function(done) {
     
     var testPromise = new Promise(function(resolve, reject) {
