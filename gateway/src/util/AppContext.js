@@ -1,4 +1,5 @@
 var TypeUtil = require('./TypeUtil')
+var FunctionUtil = require('./FunctionUtil')
 
 var Context = {}
 
@@ -17,7 +18,7 @@ var AppContext = new Proxy(Context, {
     }
 
     if (!TypeUtil.isFunction(rv)) {
-      // Not a constructor -> can't be instantiated (any more)
+      // Not a function/constructor -> can't be instantiated (any more)
       return rv
     }
     rv = instantiate(rv)
@@ -29,20 +30,25 @@ var AppContext = new Proxy(Context, {
 
 var instantiate = function (component) {
   var dependencies = []
-  var dependencyNames = getArgs(component)
+  var dependencyNames = FunctionUtil.getFunctionParameters(component)
   for (var i in dependencyNames) {
     var dependencyName = dependencyNames[i]
     dependencies.push(AppContext[dependencyName])
   }
   var instance
+
   try {
-    instance = new (Function.prototype.bind.apply(component, [null, ...dependencies]))()
+    instance = component.apply(null, dependencies)
   } catch (e) {
     // TODO: should e.message be checked for 'Function.prototype.bind.apply(...) is not a constructor'?
     // console.error(e.message)
-
-    instance = component.apply(null, dependencies)
+    // console.log(e)
   }
+
+  if (!instance) {
+    instance = new (Function.prototype.bind.apply(component, [null, ...dependencies]))()
+  }
+
   return instance
 }
 
@@ -62,31 +68,6 @@ AppContext.register = function (name, component) {
     )
   }
   Context[key] = component
-}
-
-/**
- * Use to derivate dependencies of a class/function
- *
- * taken from https://davidwalsh.name/javascript-arguments
- */
-function getArgs (func) {
-  var matches = func.toString().match(/function\s.*?\(([^)]*)\)/)
-  if (!matches) {
-    // TODO: Unify RegExpressions
-    matches = func.toString().match(/constructor\s.*?\(([^)]*)\)/)
-  }
-  var args = matches ? matches[1] : ''
-
-  return args
-    .split(',')
-    .map(function (arg) {
-      // Ensure no inline comments are parsed and trim the whitespace.
-      return arg.replace(/\/\*.*\*\//, '').trim()
-    })
-    .filter(function (arg) {
-      // Ensure no undefined values are added.
-      return arg
-    })
 }
 
 var forbiddenToOverrideProperties = Object.keys(AppContext)
