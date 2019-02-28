@@ -7,3 +7,14 @@ AppContext.register('configFile', (process.env.CONF_DIR || __dirname) + '/.env.c
 
 AppContext.register('configService', ConfigService)
 AppContext.register('keyProvider', FileEnvKeyProvider)
+
+AppContext.register('config', (ConfigService) => {
+    return ConfigService.getConfig()
+})
+
+AppContext.register('Main', (config) => {
+    return Promise.all([config]).then(values => {
+        console.log('Got config:', values[0])
+        return 0
+    })
+})
