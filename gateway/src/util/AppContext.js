@@ -40,13 +40,17 @@ var instantiate = function (component) {
   try {
     instance = component.apply(null, dependencies)
   } catch (e) {
-    // TODO: should e.message be checked for 'Function.prototype.bind.apply(...) is not a constructor'?
+    // TODO: should e.message be checked for "Class constructor SolarPanel cannot be invoked without 'new'"?
     // console.error(e.message)
-    // console.log(e)
   }
 
-  if (!instance) {
-    instance = new (Function.prototype.bind.apply(component, [null, ...dependencies]))()
+  if (instance === undefined) {
+    try {
+      instance = new (Function.prototype.bind.apply(component, [null, ...dependencies]))()
+    } catch (e) {
+      // TODO: should e.message be checked for "Function.prototype.bind.apply(...) is not a constructor"?
+      // console.error(e.message)
+    }
   }
 
   return instance
