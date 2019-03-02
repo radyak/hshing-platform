@@ -66,7 +66,7 @@ describe('TypeUtils', function () {
   })
 
   it('should recognize async functions', function () {
-    var test = async function() {}
+    var test = async function () {}
     expect(TypeUtil.isArray(test)).to.equal(false)
     expect(TypeUtil.isBoolean(test)).to.equal(false)
     expect(TypeUtil.isAsyncFunction(test)).to.equal(true)

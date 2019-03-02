@@ -2,7 +2,6 @@ var chai = require('chai')
 var expect = chai.expect
 
 describe('Try out', function () {
-
   it('path variable extraction', function () {
     var regex = new RegExp('/api/([a-zA-Z.-]*)/*(.*)', 'i')
 
@@ -22,16 +21,14 @@ describe('Try out', function () {
     var matches1 = testFunction.toString().match(regex)
     expect(matches1[2]).to.equal('a, b, c')
 
-
     var testArrowFunction = (a, b, c) => {
 
     }
     var matches2 = testArrowFunction.toString().match(regex)
     expect(matches2[2]).to.equal('a, b, c')
 
-
     class testClass {
-      constructor(a, b, c) {
+      constructor (a, b, c) { // eslint-disable-line no-useless-constructor
 
       }
     }
@@ -39,36 +36,33 @@ describe('Try out', function () {
     expect(matches3[2]).to.equal('a, b, c')
   })
 
-  it("Using a Promise with async/await that resolves successfully", function(done) {
-    
-    var testPromise = new Promise(function(resolve, reject) {
-        setTimeout(function() {
-            resolve("works")
-        }, 200)
+  it('Using a Promise with async/await that resolves successfully', function (done) {
+    var testPromise = new Promise(function (resolve, reject) {
+      setTimeout(function () {
+        resolve('works')
+      }, 200)
     })
 
-    var asyncFunction = async function() {
+    var asyncFunction = async function () {
       var result = await testPromise
-      expect(result).to.equal("works")
+      expect(result).to.equal('works')
       done()
     }
 
     asyncFunction()
   })
 
-  it("Using a normal function with await works normally", function(done) {
-    
-    var testFunction = function() {
-      return "works"
+  it('Using a normal function with await works normally', function (done) {
+    var testFunction = function () {
+      return 'works'
     }
 
-    var asyncFunction = async function() {
+    var asyncFunction = async function () {
       var result = await testFunction()
-      expect(result).to.equal("works")
+      expect(result).to.equal('works')
       done()
     }
 
     asyncFunction()
   })
-
 })
