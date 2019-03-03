@@ -17,7 +17,7 @@ var cronJob = null
  * Simple client to update DynDNS domains according to DynDNS protocol.
  * See https://help.dyn.com/remote-access-api/perform-update/
  */
-class DynDNSUpdater {
+class DynDnsUpdateService {
   /**
    *
    * @param {*} config
@@ -131,4 +131,4 @@ class DynDNSUpdater {
   }
 }
 
-module.exports = DynDNSUpdater
+module.exports = DynDnsUpdateService

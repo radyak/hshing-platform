@@ -74,6 +74,20 @@ AppContext.register = function (name, component) {
   Context[key] = component
 }
 
+AppContext.provider = function (name, providerFunction) {
+  var dependencyNames = FunctionUtil.getFunctionParameters(providerFunction)
+
+  AppContext.register(name, () => {
+    var dependencies = []
+    for (var i in dependencyNames) {
+      dependencies.push(AppContext[dependencyNames[i]])
+    }
+    return Promise.all(dependencies).then(values => {
+      return providerFunction.apply(null, values)
+    })
+  })
+}
+
 var forbiddenToOverrideProperties = Object.keys(AppContext)
 
 module.exports = AppContext

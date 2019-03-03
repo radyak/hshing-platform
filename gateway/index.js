@@ -2,6 +2,8 @@
 
 const AppContext = require('./src/util/AppContext')
 
+global.AppContext = AppContext
+
 require('./app-context')
 
 AppContext.Main.then((status) => {

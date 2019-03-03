@@ -1,7 +1,7 @@
 const ConfigService = require('./src/util/ConfigService')
 const FileEnvKeyProvider = require('./src/util/FileEnvKeyProvider')
-const AppContext = require('./src/util/AppContext')
-const DynDNSUpdater = require('./src/dyndns/DynDNSUpdater')
+// const AppContext = require('./src/util/AppContext')
+const DynDnsUpdateService = require('./src/service/DynDnsUpdateService')
 const Env = require('./src/util/Env')
 
 AppContext.register('KeyFile', (process.env.CONF_DIR || __dirname) + '/.env.key')
@@ -18,10 +18,7 @@ AppContext.register('config', (ConfigService) => {
 
 AppContext.register('Main', (config, Server) => {
   return Promise.all([config, Server]).then(values => {
-    // console.log('Got config:', values[0])
-    // console.log('and OAuthServer:', values[1])
     var Server = values[1]
-    console.log('Starting server')
     Server.start()
     console.log('Server started')
   })
@@ -31,8 +28,8 @@ AppContext.register('DynDnsComponent', (config) => {
   return Promise.all([config]).then(values => {
     config = values[0]
     if (Env.isProd()) {
-      // return new DynDNSUpdater(config).updateCyclic()
-      return new DynDNSUpdater(config)
+      // return new DynDnsUpdateService(config).updateCyclic()
+      return new DynDnsUpdateService(config)
     }
   })
 })
@@ -139,52 +136,48 @@ AppContext.register('AuthRouteConfig', (OAuthServer) => {
   })
 })
 
-AppContext.register('App', (ConfigService, AuthRouteConfig) => {
-  return Promise.all([ConfigService, AuthRouteConfig]).then(values => {
-    const ConfigService = values[0]
-    const AuthRouteConfig = values[1]
+AppContext.provider('App', (ConfigService, AuthRouteConfig) => {
 
-    var express = require('express')
-    var app = express()
-    var bodyParser = require('body-parser')
-    var DockerContainerService = require('./src/service/DockerContainerService')
+  var express = require('express')
+  var app = express()
+  var bodyParser = require('body-parser')
+  var DockerContainerService = require('./src/service/DockerContainerService')
 
-    app.use(
-      bodyParser.urlencoded({
-        extended: false
-      })
-    )
-    app.use(bodyParser.raw())
-
-    app.use('/isalive', function (req, res) {
-      res.status(204).end()
+  app.use(
+    bodyParser.urlencoded({
+      extended: false
     })
+  )
+  app.use(bodyParser.raw())
 
-    // proxy requires bodyParser.raw()!
-    app.use('/api', require('./src/rest/api-proxy'))
-
-    app.get('/admin/config', bodyParser.json(), (req, res) => {
-      ConfigService.getConfigSecure().then(config => {
-        res.status(200).send(config)
-      })
-    })
-
-    app.get('/containers', bodyParser.json(), (req, res) => {
-      DockerContainerService.getContainers().then((containers) => {
-        res.status(200).send(containers)
-      })
-    })
-
-    app.use('/auth', bodyParser.json(), AuthRouteConfig)
-
-    app.use('*', function (req, res) {
-      res.status(404).send({
-        message: 'Invalid URL'
-      })
-    })
-
-    return app
+  app.use('/isalive', function (req, res) {
+    res.status(204).end()
   })
+
+  // proxy requires bodyParser.raw()!
+  app.use('/api', require('./src/rest/api-proxy'))
+
+  app.get('/admin/config', bodyParser.json(), (req, res) => {
+    ConfigService.getConfigSecure().then(config => {
+      res.status(200).send(config)
+    })
+  })
+
+  app.get('/containers', bodyParser.json(), (req, res) => {
+    DockerContainerService.getContainers().then((containers) => {
+      res.status(200).send(containers)
+    })
+  })
+
+  app.use('/auth', bodyParser.json(), AuthRouteConfig)
+
+  app.use('*', function (req, res) {
+    res.status(404).send({
+      message: 'Invalid URL'
+    })
+  })
+
+  return app
 })
 
 AppContext.register('Server', (config, App) => {
