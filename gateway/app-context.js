@@ -1,40 +1,33 @@
 const ConfigService = require('./src/util/ConfigService')
 const FileEnvKeyProvider = require('./src/util/FileEnvKeyProvider')
-// const AppContext = require('./src/util/AppContext')
 const DynDnsUpdateService = require('./src/service/DynDnsUpdateService')
 const Env = require('./src/util/Env')
 
-AppContext.register('KeyFile', (process.env.CONF_DIR || __dirname) + '/.env.key')
+Dependency('KeyFile', (process.env.CONF_DIR || __dirname) + '/.env.key')
 
-AppContext.register('ConfigFile', (process.env.CONF_DIR || __dirname) + '/.env.conf')
+Dependency('ConfigFile', (process.env.CONF_DIR || __dirname) + '/.env.conf')
 
-AppContext.register('ConfigService', ConfigService)
+Dependency('ConfigService', ConfigService)
 
-AppContext.register('KeyProvider', FileEnvKeyProvider)
+Dependency('KeyProvider', FileEnvKeyProvider)
 
-AppContext.register('config', (ConfigService) => {
+Dependency('config', (ConfigService) => {
   return ConfigService.getConfig()
 })
 
-AppContext.register('Main', (config, Server) => {
-  return Promise.all([config, Server]).then(values => {
-    var Server = values[1]
-    Server.start()
-    console.log('Server started')
-  })
+Provider('Main', (config, Server) => {
+  Server.start()
+  console.log('Server started')
 })
 
-AppContext.register('DynDnsComponent', (config) => {
-  return Promise.all([config]).then(values => {
-    config = values[0]
-    if (Env.isProd()) {
-      // return new DynDnsUpdateService(config).updateCyclic()
-      return new DynDnsUpdateService(config)
-    }
-  })
+Provider('DynDnsComponent', (config) => {
+  if (Env.isProd()) {
+    // return new DynDnsUpdateService(config).updateCyclic()
+    return new DynDnsUpdateService(config)
+  }
 })
 
-AppContext.register('MongoDBConnection', (config) => {
+Provider('MongoDBConnection', (config) => {
   return new Promise((resolve, reject) => {
     var mongoose = require('mongoose')
 
@@ -60,83 +53,167 @@ AppContext.register('MongoDBConnection', (config) => {
   })
 })
 
-AppContext.register('OAuthModel', (MongoDBConnection) => {
-  return Promise.all([MongoDBConnection]).then(() => {
-    require('./src/persistence/model/index')
+
+// Provider('OAuthModel', (MongoDBConnection) => {
+//   require('./src/persistence/model/index')
+// })
+
+Provider('OAuthClients', (MongoDBConnection) => {
+  var mongoose = require('mongoose')
+  var Schema = mongoose.Schema
+
+  return mongoose.model('OAuthClients', new Schema({
+    clientId: { type: String },
+    clientSecret: { type: String },
+    redirectUris: { type: Array },
+    grants: { type: Array }
+  }))
+})
+
+
+Provider('OAuthTokens', (MongoDBConnection) => {
+  var mongoose = require('mongoose')
+  var Schema = mongoose.Schema
+
+  return mongoose.model('OAuthTokens', new Schema({
+    accessToken: { type: String },
+    accessTokenExpiresOn: { type: Date },
+    client: { type: Object }, // `client` and `user` are required in multiple places, for example `getAccessToken()`
+    clientId: { type: String },
+    refreshToken: { type: String },
+    refreshTokenExpiresOn: { type: Date },
+    user: { type: Object },
+    userId: { type: String }
+  }))
+})
+
+Provider('OAuthUsers', (MongoDBConnection) => {
+  var mongoose = require('mongoose')
+  var Schema = mongoose.Schema
+  
+  return mongoose.model('OAuthUsers', new Schema({
+    email: {
+      type: String,
+      min: [10, 'Email is too short'],
+      max: [99, 'Email is too long'],
+      required: [true, 'Email is required'],
+      match: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    },
+    password: {
+      type: String,
+      min: [10, 'Password is too short'],
+      max: [99, 'Password is too long'],
+      required: [true, 'Password is required']
+    },
+    username: {
+      type: String,
+      min: [10, 'Username is too short'],
+      max: [24, 'Username is too long'],
+      required: [true, 'Username is required']
+    }
+  }))
+})
+
+Provider('OAuthAuthorizationCodes', (MongoDBConnection) => {
+  var mongoose = require('mongoose')
+  var Schema = mongoose.Schema
+
+  return mongoose.model('OAuthAuthorizationCodes', new Schema({
+    authorization_code: { type: String },
+    expiresAt: { type: Date },
+    redirectUri: { type: String },
+    scope: { type: String },
+    clientId: { type: String },
+    userId: { type: String }
+  }))
+})
+
+
+
+Provider('PasswordHashService', () => {
+  const PasswordHashService = require('./src/service/PasswordHashService')
+  return PasswordHashService
+})
+
+Provider('TokenService', (OAuthTokens) => {
+  const TokenService = require('./src/service/TokenService')
+  return new TokenService(OAuthTokens)
+})
+
+Provider('AuthorizationCodeService', (OAuthAuthorizationCodes) => {
+  const AuthorizationCodeService = require('./src/service/AuthorizationCodeService')
+  return new AuthorizationCodeService(OAuthAuthorizationCodes)
+})
+
+Provider('UserService', (OAuthUsers, PasswordHashService) => {
+  const UserService = require('./src/service/UserService')
+  return new UserService(OAuthUsers, PasswordHashService)
+})
+
+Provider('ClientsService', (OAuthClients) => {
+  const ClientsService = require('./src/service/ClientsService')
+  return new ClientsService(OAuthClients)
+})
+
+Provider('AuthService', (ClientsService, TokenService, UserService, AuthorizationCodeService) => {
+  const AuthService = require('./src/service/AuthService')
+  return new AuthService(TokenService, ClientsService, UserService, AuthorizationCodeService)
+})
+
+Provider('OAuthServer', (AuthService) => {
+  const OAuthServer = require('express-oauth-server')
+  // See https://github.com/oauthjs/node-oauth2-server for specification
+  return new OAuthServer({
+    debug: true,
+    model: AuthService
   })
 })
 
-AppContext.register('AuthService', (OAuthModel) => {
-  return Promise.all([OAuthModel]).then(() => {
-    const AuthService = require('./src/service/AuthService')
-    return AuthService
+Provider('AuthRouteConfig', (OAuthServer, ClientsService, UserService) => {
+  var express = require('express')
+  var router = express.Router()
+
+  router.post('/clients', (req, res) => {
+    var clientInfo = req.body
+
+    // TODO: which fields must be generated?
+    ClientsService.createClient(
+      clientInfo.clientId,
+      clientInfo.redirectUris,
+      clientInfo.grants
+    )
+      .then((client) => {
+        res.status(200).send(client)
+      })
+      .catch(err => {
+        res.status(400).send(err)
+      })
   })
+
+  router.post('/users', (req, res) => {
+    var registration = req.body
+
+    UserService.createUser(
+      registration.username,
+      registration.email,
+      registration.password,
+      registration.passwordRepeat
+    )
+      .then((user) => {
+        res.status(200).send(user)
+      })
+      .catch(err => {
+        res.status(400).send(err)
+      })
+  })
+
+  router.use('/token', OAuthServer.token())
+  router.use('/authorize', OAuthServer.authorize())
+
+  return router
 })
 
-AppContext.register('OAuthServer', (AuthService) => {
-  return Promise.all([AuthService]).then(values => {
-    const OAuthServer = require('express-oauth-server')
-    var authService = values[0]
-    // See https://github.com/oauthjs/node-oauth2-server for specification
-    console.log('AuthService=', authService)
-    return new OAuthServer({
-      debug: true,
-      model: authService
-    })
-  })
-})
-
-AppContext.register('AuthRouteConfig', (OAuthServer) => {
-  return Promise.all([OAuthServer]).then(values => {
-    var OAuthServer = values[0]
-
-    var express = require('express')
-    var router = express.Router()
-    var ClientService = require('./src/service/ClientService')
-    var UserService = require('./src/service/UserService')
-
-    router.post('/clients', (req, res) => {
-      var clientInfo = req.body
-
-      // TODO: which fields must be generated?
-      ClientService.createClient(
-        clientInfo.clientId,
-        clientInfo.redirectUris,
-        clientInfo.grants
-      )
-        .then((client) => {
-          res.status(200).send(client)
-        })
-        .catch(err => {
-          res.status(400).send(err)
-        })
-    })
-
-    router.post('/users', (req, res) => {
-      var registration = req.body
-
-      UserService.createUser(
-        registration.username,
-        registration.email,
-        registration.password,
-        registration.passwordRepeat
-      )
-        .then((user) => {
-          res.status(200).send(user)
-        })
-        .catch(err => {
-          res.status(400).send(err)
-        })
-    })
-
-    router.use('/token', OAuthServer.token())
-    router.use('/authorize', OAuthServer.authorize())
-
-    return router
-  })
-})
-
-AppContext.provider('App', (ConfigService, AuthRouteConfig) => {
+Provider('App', (ConfigService, AuthRouteConfig) => {
 
   var express = require('express')
   var app = express()
@@ -154,9 +231,50 @@ AppContext.provider('App', (ConfigService, AuthRouteConfig) => {
     res.status(204).end()
   })
 
-  // proxy requires bodyParser.raw()!
-  app.use('/api', require('./src/rest/api-proxy'))
 
+  
+  // Works with greenlock-express out-of-the-box
+  // TODO: check is proxy requires bodyParser.raw()
+  var proxy = require('http-proxy-middleware')
+  const DEFAULT_PORT = 3000
+  app.use('/api', proxy('/api/**', {
+
+    // Overwrites `target`
+    router: function (message) {
+      var regex = new RegExp('/api/([a-zA-Z.-]*)/*(.*)', 'i')
+      var matches = regex.exec(message.url)
+      var host = matches[1]
+      var backendUrl = `http://${host}:${DEFAULT_PORT}`
+      return backendUrl
+    },
+  
+    // Default target
+    target: 'http://nirvana:3000',
+  
+    changeOrigin: true,
+  
+    ws: true,
+  
+    // Remove base path
+    pathRewrite: {
+      '^/api/[a-zA-Z0-9.-]*/': ''
+    },
+  
+    onError: function (err, req, res) {
+      console.error('An error occurred while proxying request; request:', req, 'error:', err)
+  
+      res.writeHead(502, {
+        'Content-Type': 'application/json'
+      })
+      res.end(JSON.stringify({
+        'message': 'Bad Gateway'
+      }))
+    }
+  
+  }))
+
+
+  
   app.get('/admin/config', bodyParser.json(), (req, res) => {
     ConfigService.getConfigSecure().then(config => {
       res.status(200).send(config)
@@ -180,37 +298,33 @@ AppContext.provider('App', (ConfigService, AuthRouteConfig) => {
   return app
 })
 
-AppContext.register('Server', (config, App) => {
-  return Promise.all([config, App]).then(values => {
-    const greenlock = require('greenlock-express')
-    const config = values[0]
-    const App = values[1]
+Provider('Server', (config, App) => {
+  const greenlock = require('greenlock-express')
 
-    if (Env.isProd()) {
-      var server = greenlock.create({
-        version: 'draft-11',
-        server: 'https://acme-v02.api.letsencrypt.org/directory',
-        configDir: '~/.config/acme/',
-        email: config.admin.email,
-        approvedDomains: [config.hostDomain],
-        agreeTos: true,
-        app: App,
-        communityMember: true,
-        telemetry: false
-      })
-      // .listen(80, 443)
-      return {
-        start: () => {
-          server.listen(80, 443)
-        }
-      }
-    } else {
-      console.log('Using unsecured HTTP traffic - FOR DEVELOPMENT ONLY')
-      return {
-        start: () => {
-          App.listen(80)
-        }
+  if (Env.isProd()) {
+    var server = greenlock.create({
+      version: 'draft-11',
+      server: 'https://acme-v02.api.letsencrypt.org/directory',
+      configDir: '~/.config/acme/',
+      email: config.admin.email,
+      approvedDomains: [config.hostDomain],
+      agreeTos: true,
+      app: App,
+      communityMember: true,
+      telemetry: false
+    })
+    // .listen(80, 443)
+    return {
+      start: () => {
+        server.listen(80, 443)
       }
     }
-  })
+  } else {
+    console.log('Using unsecured HTTP traffic - FOR DEVELOPMENT ONLY')
+    return {
+      start: () => {
+        App.listen(80)
+      }
+    }
+  }
 })

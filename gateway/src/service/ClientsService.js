@@ -1,15 +1,17 @@
-var mongoose = require('mongoose')
 var randomstring = require('randomstring')
 
-var OAuthClientsModel = mongoose.model('OAuthClients')
+class ClientsService {
 
-const ClientsService = {
+  constructor(OAuthClients) {
+    this.OAuthClients = OAuthClients
+  }
 
-  createClient: (clientId, redirectUris, grants) => {
+  createClient (clientId, redirectUris, grants) {
     return new Promise((resolve, reject) => {
       // TODO: further validations
 
-      var newClient = new OAuthClientsModel({
+      var OAuthClient = this.OAuthClients
+      var newClient = new OAuthClient({
         clientId: clientId,
         clientSecret: randomstring.generate(32),
         redirectUris: redirectUris,
@@ -27,9 +29,9 @@ const ClientsService = {
         }
       })
     })
-  },
+  }
 
-  updateClient: (client, redirectUris, grants) => {
+  updateClient (client, redirectUris, grants) {
     return new Promise((resolve, reject) => {
       // TODO: further validations
       client.redirectUris = redirectUris
@@ -46,7 +48,7 @@ const ClientsService = {
         }
       })
     })
-  },
+  }
 
   /**
     * Get client.
@@ -64,8 +66,8 @@ const ClientsService = {
     * }
     *
     */
-  getClient: (clientId, clientSecret) => {
-    return OAuthClientsModel.findOne({
+  getClient (clientId, clientSecret) {
+    return this.OAuthClients.findOne({
       clientId: clientId,
       clientSecret: clientSecret
     })

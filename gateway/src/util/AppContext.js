@@ -80,7 +80,8 @@ AppContext.provider = function (name, providerFunction) {
   AppContext.register(name, () => {
     var dependencies = []
     for (var i in dependencyNames) {
-      dependencies.push(AppContext[dependencyNames[i]])
+      var dependencyName = dependencyNames[i]
+      dependencies[i] = AppContext[dependencyName]
     }
     return Promise.all(dependencies).then(values => {
       return providerFunction.apply(null, values)

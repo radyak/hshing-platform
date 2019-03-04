@@ -1,58 +1,53 @@
-var TokenService = require('./TokenService')
-var ClientService = require('./ClientService')
-var UserService = require('./UserService')
-var AuthorizationCodeService = require('./AuthorizationCodeService')
+class AuthService {
 
-// Optional:
-// validateScope = function(user, client, scope){};
+  constructor(TokenService, ClientsService, UserService, AuthorizationCodeService) {
+    this.TokenService = TokenService
+    this.ClientsService = ClientsService
+    this.UserService = UserService
+    this.AuthorizationCodeService = AuthorizationCodeService
+  }
 
-var AuthService = {
+  getAccessToken (bearerToken) {
+    return this.TokenService.getAccessToken(bearerToken)
+  }
 
-  getAccessToken: function (bearerToken) {
-    return TokenService.getAccessToken(bearerToken)
-  },
+  getRefreshToken (refreshToken) {
+    return this.TokenService.getRefreshToken(refreshToken)
+  }
 
-  getRefreshToken: function (refreshToken) {
-    return TokenService.getRefreshToken(refreshToken)
-  },
-
-  saveToken: function (token, client, user) {
-    return TokenService.saveToken(token, client, user)
-  },
-
-  // optional
-  generateAccessToken: function (client, user, scope) {
-    return TokenService.generateJWT(client, user, scope)
-  },
+  saveToken (token, client, user) {
+    return this.TokenService.saveToken(token, client, user)
+  }
 
   // optional
-  // generateRefreshToken: function(client, user, scope){
-
-  // },
+  generateAccessToken (client, user, scope) {
+    return this.TokenService.generateJWT(client, user, scope)
+  }
 
   // optional
-  // generateAuthorizationCode: function(client, user, scope){
+  // generateRefreshToken(client, user, scope){ },
 
-  // },
+  // optional
+  // generateAuthorizationCode(client, user, scope){ },
 
-  getUser: function (username, password) {
-    return UserService.getUserByLogin(username, password)
-  },
+  getUser (username, password) {
+    return this.UserService.getUserByLogin(username, password)
+  }
 
-  getClient: function (clientId, clientSecret) {
-    return ClientService.getClient(clientId, clientSecret)
-  },
+  getClient (clientId, clientSecret) {
+    return this.ClientsService.getClient(clientId, clientSecret)
+  }
 
-  getAuthorizationCode: function (authorizationCode) {
-    return AuthorizationCodeService.getAuthorizationCode(authorizationCode)
-  },
+  getAuthorizationCode (authorizationCode) {
+    return this.AuthorizationCodeService.getAuthorizationCode(authorizationCode)
+  }
 
-  saveAuthorizationCode: function (code, client, user) {
-    return AuthorizationCodeService.saveAuthorizationCode(code, client, user)
-  },
+  saveAuthorizationCode (code, client, user) {
+    return this.AuthorizationCodeService.saveAuthorizationCode(code, client, user)
+  }
 
-  revokeAuthorizationCode: function (code) {
-    return AuthorizationCodeService.revokeAuthorizationCode(code)
+  revokeAuthorizationCode (code) {
+    return this.AuthorizationCodeService.revokeAuthorizationCode(code)
   }
 
 }

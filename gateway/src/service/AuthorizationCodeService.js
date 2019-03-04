@@ -1,8 +1,8 @@
-var mongoose = require('mongoose')
+class AuthorizationCodeService {
 
-var OAuthAuthorizationCodes = mongoose.model('OAuthAuthorizationCodes')
-
-const AuthorizationCodeService = {
+  constructor(OAuthAuthorizationCodes) {
+    this.OAuthAuthorizationCodes = OAuthAuthorizationCodes
+  }
 
   /**
    * Get Authorization code
@@ -23,9 +23,9 @@ const AuthorizationCodeService = {
    *    [scope]        {string}  The authorized scope of the authorization code.
    * }
    */
-  getAuthorizationCode: function (authorizationCode) {
-    return OAuthAuthorizationCodes.findOne({ authorizationCode: authorizationCode }).lean()
-  },
+  getAuthorizationCode (authorizationCode) {
+    return this.OAuthAuthorizationCodes.findOne({ authorizationCode: authorizationCode }).lean()
+  }
 
   /**
    *
@@ -53,8 +53,9 @@ const AuthorizationCodeService = {
    *    user  Object  The user associated with the authorization code.
    * }
    */
-  saveAuthorizationCode: function (code, client, user) {
-    var authorizationCode = new OAuthAuthorizationCodes({
+  saveAuthorizationCode (code, client, user) {
+    var OAuthAuthorizationCode = this.OAuthAuthorizationCodes
+    var authorizationCode = new OAuthAuthorizationCode({
       authorizationCode: code.authorizationCode,
       expiresAt: code.expiresAt,
       redirectUri: code.redirectUri,
@@ -86,10 +87,10 @@ const AuthorizationCodeService = {
 
       return data
     })
-  },
+  }
 
   // TODO: Implement
-  revokeAuthorizationCode: function (code) {
+  revokeAuthorizationCode (code) {
   }
 
 }

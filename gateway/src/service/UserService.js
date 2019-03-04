@@ -1,11 +1,11 @@
-var PasswordHashService = require('./PasswordHashService')
-var mongoose = require('mongoose')
+class UserService {
 
-var OAuthUsersModel = mongoose.model('OAuthUsers')
+  constructor(OAuthUsers, PasswordHashService) {
+    this.OAuthUsers = OAuthUsers
+    this.PasswordHashService = PasswordHashService
+  }
 
-const UserService = {
-
-  createUser: (username, email, password, passwordRepeat) => {
+  createUser (username, email, password, passwordRepeat) {
     return new Promise((resolve, reject) => {
       if (password !== passwordRepeat) {
         reject(new Error('Password and password repeat differ'))
@@ -13,10 +13,10 @@ const UserService = {
       }
 
       // TODO: further validations
-
-      var newUser = new OAuthUsersModel({
+      var OAuthUser = this.OAuthUsers
+      var newUser = new OAuthUser({
         email: email,
-        password: PasswordHashService.encrypt(password),
+        password: this.PasswordHashService.encrypt(password),
         username: username
       })
 
@@ -31,7 +31,7 @@ const UserService = {
         }
       })
     })
-  },
+  }
 
   /**
      * Get user.
@@ -39,13 +39,13 @@ const UserService = {
      *
      * TODO: elaborate later
      */
-  getUserByLogin: (username, password) => {
-    return OAuthUsersModel.findOne({
+  getUserByLogin (username, password) {
+    return this.OAuthUsers.findOne({
       username: username
     })
       .lean()
       .then((user) => {
-        if (PasswordHashService.check(password, user.password)) {
+        if (this.PasswordHashService.check(password, user.password)) {
           return user
         } else {
           throw new Error({

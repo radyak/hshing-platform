@@ -1,9 +1,10 @@
-var mongoose = require('mongoose')
 var jwt = require('jsonwebtoken')
 
-var OAuthTokensModel = mongoose.model('OAuthTokens')
+class TokenService {
 
-const TokenService = {
+  constructor(OAuthTokens) {
+    this.OAuthTokens = OAuthTokens
+  }
 
   /**
    * Get access token.
@@ -21,9 +22,9 @@ const TokenService = {
    *      [scope]               {string}  The authorized scope of the access token.
    * }
    */
-  getAccessToken: function (bearerToken) {
-    return OAuthTokensModel.findOne({ accessToken: bearerToken }).lean()
-  },
+  getAccessToken (bearerToken) {
+    return this.OAuthTokens.findOne({ accessToken: bearerToken }).lean()
+  }
 
   /**
    * Get refresh token.
@@ -31,9 +32,9 @@ const TokenService = {
    *
    * TODO: elaborate later
    */
-  getRefreshToken: function (refreshToken) {
-    return OAuthTokensModel.findOne({ refreshToken: refreshToken }).lean()
-  },
+  getRefreshToken (refreshToken) {
+    return this.OAuthTokens.findOne({ refreshToken: refreshToken }).lean()
+  }
 
   /**
    * Save token.
@@ -63,8 +64,10 @@ const TokenService = {
    *    [scope]                {string}  The authorized scope of the access token.
    * }
    */
-  saveToken: function (token, client, user) {
-    var accessToken = new OAuthTokensModel({
+  saveToken (token, client, user) {
+    console.log(`calling saveToken`)
+    var OAuthToken = this.OAuthTokens
+    var accessToken = new OAuthToken({
       accessToken: token.accessToken,
       accessTokenExpiresOn: token.accessTokenExpiresOn,
       client: client,
@@ -95,7 +98,7 @@ const TokenService = {
 
       return data
     })
-  },
+  }
 
   /**
    * Generate a JWT
@@ -106,7 +109,7 @@ const TokenService = {
    *
    * @returns   {string}  The JWT
    */
-  generateJWT: function (client, user, scope) {
+  generateJWT (client, user, scope) {
     var payload = {
       id: user._id
     }
