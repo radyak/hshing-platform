@@ -1,4 +1,3 @@
-const ConfigService = require('./src/util/ConfigService')
 const FileEnvKeyProvider = require('./src/util/FileEnvKeyProvider')
 const DynDnsUpdateService = require('./src/service/DynDnsUpdateService')
 const Env = require('./src/util/Env')
@@ -7,17 +6,10 @@ Dependency('KeyFile', (process.env.CONF_DIR || __dirname) + '/.env.key')
 
 Dependency('ConfigFile', (process.env.CONF_DIR || __dirname) + '/.env.conf')
 
-Dependency('ConfigService', ConfigService)
-
 Dependency('KeyProvider', FileEnvKeyProvider)
 
 Dependency('config', (ConfigService) => {
   return ConfigService.getConfig()
-})
-
-Provider('Main', (config, Server) => {
-  Server.start()
-  console.log('Server started')
 })
 
 Provider('DynDnsComponent', (config) => {

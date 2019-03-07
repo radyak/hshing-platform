@@ -1,7 +1,11 @@
 var TypeUtil = require('./TypeUtil')
 var FunctionUtil = require('./FunctionUtil')
+var FileUtil = require('./FileUtil')
+var path = require('path')
 
 var Context = {}
+var baseComponents = []
+var scanDirs = []
 
 var AppContext = new Proxy(Context, {
   get (target, name, receiver) {
@@ -22,7 +26,6 @@ var AppContext = new Proxy(Context, {
       return rv
     }
     rv = instantiate(rv)
-    // AppContext.register(name, rv);
     Context[key] = rv
     return rv
   }
@@ -31,8 +34,7 @@ var AppContext = new Proxy(Context, {
 var instantiate = function (component) {
   var dependencies = []
   var dependencyNames = FunctionUtil.getFunctionParameters(component)
-  for (var i in dependencyNames) {
-    var dependencyName = dependencyNames[i]
+  for (var dependencyName of dependencyNames) {
     dependencies.push(AppContext[dependencyName])
   }
   var instance
@@ -78,17 +80,65 @@ AppContext.provider = function (name, providerFunction) {
   var dependencyNames = FunctionUtil.getFunctionParameters(providerFunction)
 
   AppContext.register(name, () => {
-    var dependencies = []
-    for (var i in dependencyNames) {
-      var dependencyName = dependencyNames[i]
-      dependencies[i] = AppContext[dependencyName]
-    }
-    return Promise.all(dependencies).then(values => {
-      return providerFunction.apply(null, values)
-    })
+    return resolveThenCallback(dependencyNames, providerFunction)
   })
 }
 
-var forbiddenToOverrideProperties = Object.keys(AppContext)
+AppContext.components = function (components) {
+  for (var component of components) {
+    if (TypeUtil.isString(component)) {
+      baseComponents.push(component)
+    } else {
+      console.error(`Base components need to be configured as string! Specified was ${typeof component}`)
+    }
+  }
+
+  return AppContext
+}
+
+var resolveThenCallback = function(dependencyNames, callback) {
+  var dependencies = []
+  for (var dependencyName of dependencyNames) {
+    dependencies.push(AppContext[dependencyName])
+  }
+  return Promise.all(dependencies).then(values => {
+    return callback.apply(null, values)
+  })
+}
+
+var scanDependencies = function () {
+  var filesToScan = []
+  for (var scanDir of scanDirs) {
+    filesToScan = filesToScan.concat(FileUtil.listFilesRecursively(scanDir))
+  }
+  console.log(`Scanning following files for dependencies:`, filesToScan)
+
+  for (var file of filesToScan) {
+    require(path.resolve('.', file))
+  }
+}
+
+AppContext.start = function (callback) {
+  scanDependencies()
+  AppContext.provider('Main', callback)
+  AppContext.Main
+}
+
+AppContext.scan = function (directories) {
+  if (TypeUtil.isArray(directories)) {
+    scanDirs = scanDirs.concat(directories)
+  } else {
+    for (var argument of arguments) {
+      scanDirs.push(argument)
+    }
+  }
+  return AppContext
+}
+
+const forbiddenToOverrideProperties = Object.keys(AppContext)
+
+global.AppContext = AppContext
+global.Dependency = AppContext.register
+global.Provider = AppContext.provider
 
 module.exports = AppContext
