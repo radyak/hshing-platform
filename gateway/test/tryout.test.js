@@ -1,7 +1,26 @@
 var chai = require('chai')
 var expect = chai.expect
+var fs = require('fs')
+var path = require('path')
 
-describe('Try out', function () {
+xdescribe('Try out', function () {
+
+  it('lists files recursively', function() {
+
+    const walkSync = (dir, filelist = []) => {
+      fs.readdirSync(dir).forEach(file => {
+    
+        filelist = fs.statSync(path.join(dir, file)).isDirectory()
+          ? walkSync(path.join(dir, file), filelist)
+          : filelist.concat(path.join(dir, file))
+      });
+      return filelist;
+    }
+    
+    var files = walkSync(__dirname)
+    console.log(files)
+  })
+
   it('path variable extraction', function () {
     var regex = new RegExp('/api/([a-zA-Z.-]*)/*(.*)', 'i')
 

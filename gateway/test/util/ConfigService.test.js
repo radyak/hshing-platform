@@ -6,8 +6,8 @@ var expect = chai.expect
 var ConfigService = require('../../src/util/ConfigService')
 var FileEnvKeyProvider = require('../../src/util/FileEnvKeyProvider')
 
-var defaultFile = path.join(__dirname, 'res', '.env.conf')
-var defaultKeyFile = path.join(__dirname, 'res', '.env.key')
+var defaultFile = path.join(__dirname, '..', 'res', '.env.conf')
+var defaultKeyFile = path.join(__dirname, '..', 'res', '.env.key')
 
 var envKeyProvider = new FileEnvKeyProvider(defaultKeyFile)
 

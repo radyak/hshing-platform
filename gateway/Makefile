@@ -16,6 +16,7 @@ tests:
 
 tests.dev:
 	npm test -- -w
+	#npm test -- -w --grep 'lists files recursively'
 
 dev:
 	npm run watch
