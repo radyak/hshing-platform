@@ -22,9 +22,13 @@ services:
       - 443:443
     volumes:
       - "/home/pirate/conf:/usr/src/conf"
+      - "/var/run/docker.sock:/var/run/docker.sock"
     environment:
       - CONF_DIR=/usr/src/conf
 #      - ENV=dev
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=27017
+      - MONGO_DATABASE=auth
 
   test-app:
     container_name: test-app
@@ -34,5 +38,6 @@ services:
 
   mongodb:
     container_name: mongodb
-    image: nonoroazoro/rpi-mongo
+#    image: nonoroazoro/rpi-mongo # incompatible with currently used 'wire' driver version
+    image: zsimo/rpi-mongo
 
