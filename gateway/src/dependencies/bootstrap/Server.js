@@ -17,6 +17,7 @@ Provider('Server', (Env, config, App) => {
     return {
       start: () => {
         server.listen(80, 443)
+        console.log(`Listening on ports 80, 443`)
       }
     }
   } else {
@@ -24,6 +25,7 @@ Provider('Server', (Env, config, App) => {
     return {
       start: () => {
         App.listen(80)
+        console.log(`Listening on port 80`)
       }
     }
   }
