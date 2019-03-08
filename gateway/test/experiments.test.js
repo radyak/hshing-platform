@@ -3,7 +3,7 @@ var expect = chai.expect
 var fs = require('fs')
 var path = require('path')
 
-xdescribe('Try out', function () {
+xdescribe('Experiments', function () {
 
   it('lists files recursively', function() {
 
