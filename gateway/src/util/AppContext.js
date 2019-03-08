@@ -140,5 +140,6 @@ const forbiddenToOverrideProperties = Object.keys(AppContext)
 global.AppContext = AppContext
 global.Dependency = AppContext.register
 global.Provider = AppContext.provider
+global.Configuration = AppContext.provider
 
 module.exports = AppContext

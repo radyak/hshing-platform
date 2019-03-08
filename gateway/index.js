@@ -1,8 +1,4 @@
-'use strict'
-
 const AppContext = require('./src/util/AppContext')
-
-require('./app-context')
 
 AppContext
   .scan([

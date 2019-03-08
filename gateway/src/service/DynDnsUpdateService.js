@@ -1,5 +1,3 @@
-'use strict'
-
 const { promisify } = require('util')
 const getIP = promisify(require('external-ip')())
 const get = require('simple-get')
