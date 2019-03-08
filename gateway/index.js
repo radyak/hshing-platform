@@ -4,8 +4,7 @@ AppContext
   .scan([
     'src/dependencies'
   ])
-  .start((config, Server) => {
-    console.log(config)
-    console.log(Server)
+  .start((Server, DynDns) => {
     Server.start()
+    console.log(`Application started`)
   })

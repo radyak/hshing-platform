@@ -1,6 +1,5 @@
 class UserService {
-
-  constructor(OAuthUsers, PasswordHashService) {
+  constructor (OAuthUsers, PasswordHashService) {
     this.OAuthUsers = OAuthUsers
     this.PasswordHashService = PasswordHashService
   }
@@ -54,7 +53,6 @@ class UserService {
         }
       })
   }
-
 }
 
 module.exports = UserService

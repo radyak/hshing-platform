@@ -96,7 +96,7 @@ AppContext.components = function (components) {
   return AppContext
 }
 
-var resolveThenCallback = function(dependencyNames, callback) {
+var resolveThenCallback = function (dependencyNames, callback) {
   var dependencies = []
   for (var dependencyName of dependencyNames) {
     dependencies.push(AppContext[dependencyName])
@@ -121,7 +121,7 @@ var scanDependencies = function () {
 AppContext.start = function (callback) {
   scanDependencies()
   AppContext.provider('Main', callback)
-  AppContext.Main
+  return AppContext.Main
 }
 
 AppContext.scan = function (directories) {

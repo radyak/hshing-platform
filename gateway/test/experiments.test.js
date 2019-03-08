@@ -4,19 +4,16 @@ var fs = require('fs')
 var path = require('path')
 
 xdescribe('Experiments', function () {
-
-  it('lists files recursively', function() {
-
+  it('lists files recursively', function () {
     const walkSync = (dir, filelist = []) => {
       fs.readdirSync(dir).forEach(file => {
-    
         filelist = fs.statSync(path.join(dir, file)).isDirectory()
           ? walkSync(path.join(dir, file), filelist)
           : filelist.concat(path.join(dir, file))
-      });
-      return filelist;
+      })
+      return filelist
     }
-    
+
     var files = walkSync(__dirname)
     console.log(files)
   })

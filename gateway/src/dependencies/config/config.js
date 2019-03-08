@@ -1,4 +1,3 @@
 Dependency('config', (ConfigService) => {
-    return ConfigService.getConfig()
+  return ConfigService.getConfig()
 })
-  

@@ -1,8 +1,7 @@
 var jwt = require('jsonwebtoken')
 
 class TokenService {
-
-  constructor(OAuthTokens) {
+  constructor (OAuthTokens) {
     this.OAuthTokens = OAuthTokens
   }
 
@@ -127,7 +126,6 @@ class TokenService {
 
     return jwt.sign(payload, 'secret', options)
   }
-
 }
 
 module.exports = TokenService

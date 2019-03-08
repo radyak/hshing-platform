@@ -20,6 +20,11 @@
     "standard": "^12.0.1"
   },
   "standard": {
+    "globals": [
+      "Configuration",
+      "Dependency",
+      "Provider"
+    ],
     "env": [
       "mocha"
     ]

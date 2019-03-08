@@ -1,6 +1,5 @@
 class AuthService {
-
-  constructor(TokenService, ClientsService, UserService, AuthorizationCodeService) {
+  constructor (TokenService, ClientsService, UserService, AuthorizationCodeService) {
     this.TokenService = TokenService
     this.ClientsService = ClientsService
     this.UserService = UserService
@@ -49,7 +48,6 @@ class AuthService {
   revokeAuthorizationCode (code) {
     return this.AuthorizationCodeService.revokeAuthorizationCode(code)
   }
-
 }
 
 module.exports = AuthService

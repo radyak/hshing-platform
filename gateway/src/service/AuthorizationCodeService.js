@@ -1,6 +1,5 @@
 class AuthorizationCodeService {
-
-  constructor(OAuthAuthorizationCodes) {
+  constructor (OAuthAuthorizationCodes) {
     this.OAuthAuthorizationCodes = OAuthAuthorizationCodes
   }
 
@@ -92,7 +91,6 @@ class AuthorizationCodeService {
   // TODO: Implement
   revokeAuthorizationCode (code) {
   }
-
 }
 
 module.exports = AuthorizationCodeService

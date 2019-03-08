@@ -1,8 +1,7 @@
 var randomstring = require('randomstring')
 
 class ClientsService {
-
-  constructor(OAuthClients) {
+  constructor (OAuthClients) {
     this.OAuthClients = OAuthClients
   }
 
@@ -80,7 +79,6 @@ class ClientsService {
         return client
       })
   }
-
 }
 
 module.exports = ClientsService
