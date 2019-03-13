@@ -1,130 +1,77 @@
-# _Home Sweet Host_ Project
+# The ***Home Sweet Host*** *Project* 
 
-The _Home Sweet Host_ project aims to provide each and every private person with the maxmium of reliable privacy for their data like
+Welcome to the Project site of ***Home Sweet Host***!
+
+Take a seat, have a look and feel yourself at home!
+
+## What is the ***Home Sweet Host*** *Project*?
+
+*Home Sweet Host* is a mini home server for anyone, which ...
+* ... is easy to set up and use,
+* ... can be accessed only you (and trusted persons) and
+* ... keeps your data private and close to you - no need to trust big companies and hand them over your privacy!
+
+## How does it work?
+
+Every mobile or web app, e.g. for
 
 * contacts
 * calendars
 * health data
 * private files
-* ... and nearly any other data you could think of
+* and nearly any other data you could think of
 
-To achieve this, we believe that hosting your own microscopic home server, that only you (and trusted persons) can access, is the best solution. And this should be as easy and at the same time as secure as possible. Like "Plug it, set up a password and go".
+requires a *backend* that is usually hosted remotely by big companies. This makes it intransparent what happens to the user's data and how it is used by the companies.
+That's where *Home Sweet Host* kicks in: *Home Sweet Host* aims to provide each and every private person with the maxmium of reliable privacy for their data.
 
-## Usage
+To achieve this, we believe that hosting your own microscopic home server, that only you (and trusted persons) can access, is the best solution. And this should be as easy and at the same time as secure as possible. Like "Plug it, set up a password and go". Have your app backends at home where it is secure from unauthorized access!
 
-Keeping private data private should be easy, this means taking a _Home Sweet Host_ to operation should be a breeze.
-I.e. users should only be required to:
 
-* Plug it into a router and a power outlet
-* After the first start, configure it from the home network through the webbrowser or the official app:
-  * Create an administrator password
-  * Optional steps (can also be done later at any time):
-    * Only if it should be accessible from outside the home network: set up a *HomeConnect* ID (normal users) or a custom DNS registration (advanced users)
-    * Set up a startup key (small USB drive with an encryption algorithm on it), to ensure that only the owners can start the _Home Sweet Host_
-    * Create users with passwords and privileges
-
-After that, the _Home Sweet Host_ is ready to be used! Here is how:
-
-Each _Home Sweet Host_ application contains two parts:
-* A *client* or *frontend*, such as a smart phone or a webbrowser
-* A *server component* or *backend*, that _Home Sweet Host_ installs on itself
-
-The server components can be installed via an Administration mobile app or the webbrowser from a central store, just like mobile app stores.
-The client parts for smart phones will be available as normal mobile apps in the according app stores for *Android* and *Apple*. They need to be set up to connect to a specific _Home Sweet Host_ with a user-password combination.
-
-## Technology Stack
-
-Therefore, we make use of some well-known, well-tested and supported technologies:
-
-* [*Raspberry Pi*]() as hardware
-* [*Hypriot*]() as operating system
-* [*Docker*]() and [*Docker Swarm*]() for easy installation, updates and removal of software components and applications
-* Mainly [*NodeJS*]() for building applications (but in theory, any other programming language, platform or framework could be used), since it is prevalent, based on a common language and probably the platform with the most public contributions and the biggest set of modules and plugins available
+For a detailed information on what we aim for, have a look at the project's [Goals](./docs/goals.md).
 
 
 
+## Current state
+
+The project was started in Jan' 2019 and is currently still in 
+
+> <big>***prototype state***</big>
+
+For more information on what we have already achieved, have a look at the project's [Status](./docs/status.md).
 
 
+## But why do we think we need a project like this?
 
+In these times of Facebook, Google and other data collectors we all use apps with great convenience for free. Wait... actually for ***free***?
 
-The Main Platform clusters the core functionality of a _Home Sweet Host_. It is separated into the components
+> ***No.*** How should it even be free? 
+> 
+> Ever wondered how those big companies earn billions and billions of dollars? They earn from us. We always pay to them. We don't necessarily pay with money. But with our data, with our personal information, with our privacy.
 
-- Gateway
-- Persistence
+But then, why does everybody use apps that expose all of our data?
 
-## Component _Gateway_
+> Because it is sooo convenient. You install an app on your mobile phone, maybe register and you're ready to go.
 
-The main roles it serves as are:
+Exactly! It is so easy.. Well ok, they use some of my data. But it is only used by them. No need to be paranoid. So what?
 
-- Network Entrypoint:
-  - registering IP at DNS
-  - establishing and terminating HTTPS
-- API Gateway:
-  - routing
-  - authN/authZ
-  - ...
-- Administration platform for
-  - installed app containers
-  - main configuration
-  - ...
+> Uhm, you've read about all the data leaks and how the user's data was sold by big companies recently, right? Some of them were even used to influence elections.
 
-## Component _Persistence_
+Well... yes... there were some rumors. I know. But on the other hand, I have nothing to hide. Why should I care?
 
-To be done ...
+> Well, yes. That's a point. Uhm ok... you might... aswell go ahead and leave everything exposed to everybody, like all your personal information, your and your friend's contact data, your installed apps and how you use them, your geo position, maybe messages to friends & family, notes, images & videos, diaries or what not.
 
-## Required manual setup steps
+Mh... yeah that's what way saying...
 
-- Domain Provider: Create a (sub)domain and enable DynDNS for it
-- Router: Forward ports 80 and 443 to the _Home Sweet Host_
-- _Home Sweet Host_: see [Host-Setup](./host/README.md)
+> Yes. I mean, what could go wrong, right? At least as long as you don't live in countries that are interested in your data, like North Corea, or China, or Cuba...
+> 
+> Actually, there's a great quote I've read yesterday:
+> 
+>> <big>*"Times have changed so little during the last decades, we always know what comes next. Our country is stable and the time of big changes is far gone. We are so safe here."*</big>
+>> 
+>> *The people of Turkey, Belarus, Venezuela, Honduras, USA, Philippines, Russia, Hungary. Others yet to follow.*
 
+Uhm..
 
-<!--
-Example mermaid sequence diagram
+> ***Now care to keep your data as close to you as possible?***
 
-see https://mermaidjs.github.io/sequenceDiagram.html
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant Client
-    participant AppBackend
-    participant AuthBackend
-
-    User->>Client: action
-    Client->>AppBackend: BackendCall (not authenticated)
-    activate AppBackend
-    AppBackend->>AppBackend: Check Authentication
-    AppBackend->>Client: Response: not authenticated
-    deactivate AppBackend
-    Client->>User: Display login form
-
-    Note over A,J: A typical interaction
-    J->>A: Great!
-    deactivate J
-```
--->
-
-## ToDos
-
-- [x] Install SSL certificate automatically
-- [x] Register domain at DNS provider
-- [x] Standard _formatting_ (Standard JS, https://standardjs.com/)
-- [ ] Require an main configuration before server start
-  - [x] encrypted
-  - [ ] validated
-- [ ] Generate config key on first startup
-- [ ] Use `request` for `DynNSUpdater` instead of `simple-get`
-- [ ] Use a global context to manage subcomponents
-- [ ] Use _core components_:
-  - [ ] Persistence: _MongoDB_
-- [ ] _Start docker-compose_ on machine startup
-- [ ] _Automatic port forwardings_ on connected router (UPnP? TR-069?)
-- [ ] Add/complete _JsDoc_
-- [ ] Leverage `AppContext` to bootstrap components
-- [ ] _Tests_ (use Mock MongoDB)
-- [ ] _Validations_/central model
-- [ ] Develop routine for _first startup_ of unconfigured cluster
-- [ ] Develop rock-solid _management for config & secrets_ (Docker Swarm?)
-- [ ] _App management_ (aka container management; Portainer)
-- [ ] _Extend readme_, add diagrams for most important flows
+Just as I thought.
