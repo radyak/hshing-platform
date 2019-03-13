@@ -1,7 +1,10 @@
 #!make
-include ../.build-parameters
-include .build-parameters
+include ../.env
 export
+
+IMAGE=gateway
+REPO=radyak
+TAG=latest
 
 default: deploy
 

@@ -40,3 +40,10 @@ services:
         - BASE_IMAGE=mongo
     ports:
       - 27017:27017
+  
+  mongoclient:
+    container_name: mongoclient
+    image: mongoclient/mongoclient
+    ports:
+      - 3000:3000
+    # network_mode: host

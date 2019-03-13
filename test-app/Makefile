@@ -1,7 +1,10 @@
 #!make
 include ../.build-parameters
-include .build-parameters
 export
+
+IMAGE=test-app
+REPO=radyak
+TAG=latest
 
 default: deploy
 
