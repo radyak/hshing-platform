@@ -10,6 +10,9 @@ deploy: cluster-config.deploy
 dev.cluster:
 	docker-compose up --build
 
+dev.cluster.clean:
+	docker-compose down
+
 dev.lint:
 	npm run lint
 
