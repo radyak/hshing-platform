@@ -4,6 +4,12 @@ var fs = require('fs')
 var path = require('path')
 
 xdescribe('Experiments', function () {
+  it('splits strings by comma', function () {
+    var testString = "test1 ,  ,,    test2"
+    var result = testString.split(/[\s,]+/)
+    expect(result).to.deep.equal(['test1', 'test2'])
+  })
+
   it('lists files recursively', function () {
     const walkSync = (dir, filelist = []) => {
       fs.readdirSync(dir).forEach(file => {

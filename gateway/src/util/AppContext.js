@@ -4,8 +4,8 @@ var FileUtil = require('./FileUtil')
 var path = require('path')
 
 var Context = {}
-var baseComponents = []
 var scanDirs = []
+var activeProfiles = []
 
 var AppContext = new Proxy(Context, {
   get (target, name, receiver) {
@@ -58,7 +58,7 @@ var instantiate = function (component) {
   return instance
 }
 
-AppContext.register = function (name, component) {
+AppContext.register = function (name, component, profile = 'default') {
   if (forbiddenToOverrideProperties.indexOf(name) !== -1) {
     throw new Error(`Registration with keys ${forbiddenToOverrideProperties.join(', ')} is not allowed`)
   }
@@ -67,33 +67,38 @@ AppContext.register = function (name, component) {
       `Components must be registered with a non-empty name of type *string*, but was tried with ${name} (type: ${typeof name})`
     )
   }
-  var key = name.trim().toLowerCase()
-  if (Context.hasOwnProperty(name)) {
-    console.warn(
-      `A component with name '${name}' has already been registered; overwriting it`
+  if (!TypeUtil.isString(profile) || !profile.trim()) {
+    throw new Error(
+      `Profiles must be a non-empty name of type *string*, but was tried with ${profile} (type: ${typeof profile})`
     )
   }
-  Context[key] = component
+  var key = name.trim().toLowerCase()
+
+  // can only be registered if:
+  //  * profile is active
+  //  * not yet registered
+  //  * or if not the default profile (other profiles always override the default profile)
+  if (isProfileActive(profile) && (
+        !Context.hasOwnProperty(name) || !isDefaultProfile(profile))
+  ) {
+    Context[key] = component
+  }
 }
 
-AppContext.provider = function (name, providerFunction) {
+var isProfileActive = function(profile) {
+  return isDefaultProfile(profile) || activeProfiles.indexOf(profile) !== -1
+}
+
+var isDefaultProfile = function(profile) {
+  return profile === 'default'
+}
+
+AppContext.provider = function (name, providerFunction, profile = 'default') {
   var dependencyNames = FunctionUtil.getFunctionParameters(providerFunction)
 
   AppContext.register(name, () => {
     return resolveThenCallback(dependencyNames, providerFunction)
-  })
-}
-
-AppContext.components = function (components) {
-  for (var component of components) {
-    if (TypeUtil.isString(component)) {
-      baseComponents.push(component)
-    } else {
-      console.error(`Base components need to be configured as string! Specified was ${typeof component}`)
-    }
-  }
-
-  return AppContext
+  }, profile)
 }
 
 var resolveThenCallback = function (dependencyNames, callback) {
@@ -111,15 +116,40 @@ var scanDependencies = function () {
   for (var scanDir of scanDirs) {
     filesToScan = filesToScan.concat(FileUtil.listFilesRecursively(scanDir))
   }
-  console.log(`Scanning following files for dependencies:`, filesToScan)
+  console.log(`Scanning following files for dependencies:\n`, filesToScan.join(',\n\t'))
 
   for (var file of filesToScan) {
     require(path.resolve('.', file))
   }
 }
 
+var addEnvironmentConfiguredProfiles = function () {
+  var envVarProfiles = process.env.ACTIVE_CONTEXT_PROFILES
+  if (envVarProfiles) {
+    envVarProfiles = envVarProfiles.split(/[\s,]+/)
+    activeProfiles = activeProfiles.concat(envVarProfiles)
+  }
+}
+
+AppContext.profiles = function (profiles) {
+  activeProfiles = []
+  if (TypeUtil.isArray(profiles)) {
+    activeProfiles = activeProfiles.concat(profiles)
+  } else {
+    for (var argument of arguments) {
+      activeProfiles.push(argument)
+    }
+  }
+  return AppContext
+}
+
 AppContext.start = function (callback) {
+  addEnvironmentConfiguredProfiles()
+  console.log(`Active profiles:\n`, activeProfiles.join(',\n\t'))
+
   scanDependencies()
+  console.log(`Registered context components (by key):\n`, Object.keys(Context).join(',\n\t'))
+  
   AppContext.provider('Main', callback)
   return AppContext.Main
 }
