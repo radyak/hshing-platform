@@ -1,6 +1,6 @@
 const { promisify } = require('util')
 const getIP = promisify(require('external-ip')())
-const get = require('simple-get')
+const request = require('request')
 var cron = require('node-cron')
 const SimpleParamCheck = require('../util/SimpleParamCheck')
 
@@ -55,38 +55,31 @@ class DynDnsUpdateService {
           this.config.domain
         }&myip=${EXTERNALIP}`
 
-        get(
-          {
-            url: URL,
-            method: 'GET',
-            headers: {
-              'User-Agent': 'nodeclient',
-              Host: this.config.dynDnsHost,
-              Authorization: `Basic ${base64Credentials}`
-            }
-          },
-          function (err, res) {
-            if (err) {
-              state = {
-                previousExternalIP: null,
-                error: err
-              }
-              throw err
-            }
-
-            res.setTimeout(10000)
-
-            res.on('data', function (chunk) {
-              // TODO: evaluation of chunk's content
-              // API like https://www.npmjs.com/package/ddns-updater or https://www.npmjs.com/package/node-dyndns-client
-              console.log('DynDNS server responded with: ' + chunk)
-              state = {
-                previousExternalIP: EXTERNALIP,
-                error: null
-              }
-            })
+        var options = {
+          url: URL,
+          headers: {
+            'User-Agent': 'nodeclient',
+            Host: this.config.dynDnsHost,
+            Authorization: `Basic ${base64Credentials}`
           }
-        )
+        }
+
+        request.get(options, (err, res, body) => {
+          if (err) {
+            state = {
+              previousExternalIP: null,
+              error: err
+            }
+            throw err
+          }
+
+          console.log('DynDNS server responded with: ' + body)
+
+          state = {
+            previousExternalIP: EXTERNALIP,
+            error: null
+          }
+        })
       })
       .catch(error => {
         console.error(error)
