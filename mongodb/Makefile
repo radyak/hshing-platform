@@ -9,10 +9,10 @@ prepare.arm32:
 	docker run --rm --privileged multiarch/qemu-user-static:register --reset
 
 arm32: prepare.arm32
-	docker build -t $(REPO)/$(IMAGE) --build-arg BASE_IMAGE=nonoroazoro/rpi-mongo .
+	docker build -t $(REPO)/$(IMAGE) .
 
-dev:
-	docker build -t $(REPO)/$(IMAGE) --build-arg BASE_IMAGE=mongo .
+dev: prepare.arm32
+	docker build -t $(REPO)/$(IMAGE) .
 
 run: dev
 	docker run $(REPO)/$(IMAGE)

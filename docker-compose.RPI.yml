@@ -29,9 +29,12 @@ services:
     image: radyak/test-app
     environment:
       - PORT=3000
-
+  
   mongodb:
     container_name: mongodb
-#    image: nonoroazoro/rpi-mongo # incompatible with currently used 'wire' driver version
-    image: zsimo/rpi-mongo
+    image: radyak/mongodb
+  #   image: nonoroazoro/rpi-mongo # incompatible with currently used 'wire' driver version
+  #   image: zsimo/rpi-mongo
+    ports:
+      - 27017:27017
 

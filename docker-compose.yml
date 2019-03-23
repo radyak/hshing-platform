@@ -35,10 +35,11 @@ services:
     
   mongodb:
     container_name: mongodb
-    build:
-      context: ./mongodb
-      args:
-        - BASE_IMAGE=mongo
+    image: mongo
+    # build:
+    #   context: ./mongodb
+    #   args:
+    #     - BASE_IMAGE=mongo
     ports:
       - 27017:27017
   
