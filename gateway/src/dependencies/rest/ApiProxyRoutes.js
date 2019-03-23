@@ -3,16 +3,25 @@
 var proxy = require('http-proxy-middleware')
 const DEFAULT_PORT = 3000
 
-Configuration('ApiProxyRoutes', () => {
+Configuration('ApiProxyRoutes', (BackendConfigurationService) => {
 
     return proxy('/api/**', {
 
         // Overwrites `target`
         router: function (message) {
-          var regex = new RegExp('/api/([a-zA-Z.-]*)/*(.*)', 'i')
+          var regex = new RegExp('/api/([a-zA-Z0-9.-]*)/*(.*)', 'i')
           var matches = regex.exec(message.url)
-          var host = matches[1]
-          var backendUrl = `http://${host}:${DEFAULT_PORT}`
+
+          console.log('matches=', matches)
+          
+          var backendName = matches[1]
+
+          var backendConfig = BackendConfigurationService.getBackendConfiguration(backendName)
+
+          var host = backendConfig.host || backendName
+          var port = backendConfig.port || DEFAULT_PORT
+
+          var backendUrl = `http://${host}:${port}`
           return backendUrl
         },
     

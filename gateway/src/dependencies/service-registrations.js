@@ -35,3 +35,8 @@ Provider('AuthService', (ClientsService, TokenService, UserService, Authorizatio
   const AuthService = require('../service/AuthService')
   return new AuthService(TokenService, ClientsService, UserService, AuthorizationCodeService)
 })
+
+Provider('BackendConfigurationService', () => {
+  const DummyBackendConfigurationService = require('../service/DummyBackendConfigurationService')
+  return new DummyBackendConfigurationService()
+})

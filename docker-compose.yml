@@ -31,7 +31,7 @@ services:
       args:
         - BASE_IMAGE=node:8
     environment:
-      - PORT=3000
+      - PORT=3210
     
   mongodb:
     container_name: mongodb
@@ -42,10 +42,20 @@ services:
     #     - BASE_IMAGE=mongo
     ports:
       - 27017:27017
-  
+
+
+## For testing the dynamic proxy:
+
   # mongoclient:
   #   container_name: mongoclient
   #   image: mongoclient/mongoclient
   #   ports:
   #     - 3000:3000
-  #   # network_mode: host
+  #   network_mode: host
+
+  portainer:
+    image: portainer/portainer
+    ports:
+      - "9000:9000"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
