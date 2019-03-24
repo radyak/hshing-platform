@@ -12,14 +12,17 @@ Provider('App', (AuthRoutes, ApiProxyRoutes, AdminRoutes, ContainerRoutes) => {
   
   app.use(bodyParser.raw())
 
-  app.use('/isalive', function (req, res) {
+  app.use('/api/isalive', function (req, res) {
     res.status(204).end()
   })
 
+  app.use('/api/admin', bodyParser.json(), AdminRoutes)
+  app.use('/api/containers', bodyParser.json(), ContainerRoutes)
+  app.use('/api/auth', bodyParser.json(), AuthRoutes)
+
   app.use('/api', ApiProxyRoutes)
-  app.use('/admin', bodyParser.json(), AdminRoutes)
-  app.use('/containers', bodyParser.json(), ContainerRoutes)
-  app.use('/auth', bodyParser.json(), AuthRoutes)
+
+  app.use('/', express.static('/usr/src/frontend/dist/management'))
 
   app.use('*', function (req, res) {
     res.status(404).send({

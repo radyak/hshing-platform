@@ -4,6 +4,7 @@ import { OverviewComponent } from './overview/overview.component';
 import { StoreComponent } from './store/store.component';
 
 const routes: Routes = [
+  {path: '', component: OverviewComponent},
   {path: 'overview', component: OverviewComponent},
   {path: 'store', component: StoreComponent}
 ];

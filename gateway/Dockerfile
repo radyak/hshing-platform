@@ -1,6 +1,27 @@
 ARG BASE_IMAGE=arm32v7/node
 
-FROM ${BASE_IMAGE}
+
+FROM node:10 AS frontend-build
+
+
+WORKDIR /usr/src/frontend
+
+COPY ./static/package*.json ./
+
+RUN npm install
+
+COPY ./static ./
+
+RUN ls -la
+
+RUN npm run build
+
+RUN ls -la
+
+
+
+
+FROM ${BASE_IMAGE} AS runtime
 
 COPY ./qemu-arm-static /usr/bin/qemu-arm-static
 
@@ -18,6 +39,9 @@ RUN npm install
 
 # Bundle app source
 COPY . .
+
+#Copy frontend build
+COPY --from=frontend-build /usr/src/frontend /usr/src/frontend
 
 EXPOSE 80:80
 EXPOSE 443:443

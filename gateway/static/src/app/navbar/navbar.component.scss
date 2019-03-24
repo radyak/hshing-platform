@@ -1,0 +1,30 @@
+
+.navmenu {
+    font-size: 1.5rem;
+}
+
+.navbar-dark .navbar-toggler {
+    color: #fff;
+    border-color: #fff;
+    border-width: 2px;
+}
+
+.navbar-brand > * {
+    margin-right: 15px;
+}
+
+.nav-link {
+    color: white !important;
+    text-decoration: none !important;
+
+    &:hover,
+    &.active {
+        color: rgb(8, 224, 73) !important;
+        text-shadow: 0 0 5px rgba(8, 224, 73, 0.5);
+    }
+}
+
+logo {
+    width: 50px;
+    height: 70px;
+}
