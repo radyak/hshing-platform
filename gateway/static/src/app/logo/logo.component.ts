@@ -14,5 +14,7 @@ export class LogoComponent implements OnInit {
 
   @Input() width: number = 50;
   @Input() height: number = 70;
+  @Input() color: string = 'white';
+  @Input() fill: string = 'white';
 
 }

@@ -1,4 +1,15 @@
 
+.card-head {
+    text-align: center;
+    height: 225px;
+    vertical-align: middle;
+
+    & > .symbol {
+        top: 1.5rem;
+        position: relative;
+    }
+}
+
 .card {
     background: #343a40 !important;
     color: #fff;
