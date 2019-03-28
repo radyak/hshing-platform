@@ -75,5 +75,72 @@ describe('RestEvent', function () {
 
   })
 
+  it('should ignore all callbacks if error occurred (constructor-defined callback)', function (done) {
+    
+    var event = new RestEvent({
+        statusCode: 204
+    }, {
+        error: 'Some error message'
+    }, () => {
+        done()
+    })
+    .onBadGateway(() => {
+        done('onBadGateway, but constructor with error and errorCallback called')
+    })
+    .onNotFound(() => {
+        done('onNotFound, but constructor with error and errorCallback called')
+    })
+    .onClientError(() => {
+        done('onClientError, but constructor with error and errorCallback called')
+    })
+    .onServerError(() => {
+        done('onClientError, but constructor with error and errorCallback called')
+    })
+    .onNoContent(() => {
+        done('onNoContent, but constructor with error and errorCallback called')
+    })
+    .onSuccess(() => {
+        done('onSuccess, but constructor with error and errorCallback called')
+    })
+    .default(() => {
+        done('default, but onOk defined')
+    })
+
+  })
+
+  it('should ignore all callbacks if error occurred (method-defined callback)', function (done) {
+    
+    var event = new RestEvent({
+        statusCode: 204
+    }, {
+        error: 'Some error message'
+    })
+    .onBadGateway(() => {
+        done('onBadGateway, but constructor with error and errorCallback called')
+    })
+    .onNotFound(() => {
+        done('onNotFound, but constructor with error and errorCallback called')
+    })
+    .onClientError(() => {
+        done('onClientError, but constructor with error and errorCallback called')
+    })
+    .onServerError(() => {
+        done('onClientError, but constructor with error and errorCallback called')
+    })
+    .onGeneralError(() => {
+        done()
+    })
+    .onNoContent(() => {
+        done('onNoContent, but constructor with error and errorCallback called')
+    })
+    .onSuccess(() => {
+        done('onSuccess, but constructor with error and errorCallback called')
+    })
+    .default(() => {
+        done('default, but onOk defined')
+    })
+
+  })
+
 
 })

@@ -7,9 +7,13 @@ function fallbackCallback(request) {
 
 class RestEvent {
 
-    constructor(request) {
+    constructor(request, error, errorCallback) {
         this.request = request
         this.finished = false
+        this.error = error
+        if (error) {
+            this.onGeneralError(errorCallback)
+        } 
     }
 
     matches(status) {
@@ -24,12 +28,26 @@ class RestEvent {
 
     executeIfMathing(status, callback) {
         if (!this.finished && this.matches(status)) {
-            callback(this.request)
+            callback(this.request, this.error)
             this.finished = true
         }
         return this
     }
 
+    /*
+     * On Error (e.g. network failures)
+     */
+    onGeneralError(callback) {
+        if (callback) {
+            this.finished = !callback(this.request, this.error)
+        }
+        return this
+    }
+
+
+    /*
+     * Default
+     */
     default(callback) {
         if (!this.finished) {
             callback(this.request)
