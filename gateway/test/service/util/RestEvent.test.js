@@ -18,7 +18,6 @@ describe('RestEvent', function () {
     .default(() => {
         done('default, but onOk defined')
     })
-    .process()
 
   })
 
@@ -33,7 +32,6 @@ describe('RestEvent', function () {
     .default(() => {
         done('default, but onOk defined')
     })
-    .process()
 
   })
 
@@ -45,21 +43,35 @@ describe('RestEvent', function () {
     .default(() => {
         done()
     })
-    .process()
 
   })
 
-  it('should throw error if nothing is defined', function (done) {
+  it('should ignore previous non-matching callbacks', function (done) {
     
-    try {
-        var event = new RestEvent({
-            statusCode: 200
-        })
-        .process()
-        done('No error was thrown')
-    } catch(e) {
+    var event = new RestEvent({
+        statusCode: 204
+    })
+    .onBadGateway(() => {
+        done('onBadGateway, but onNoContent defined')
+    })
+    .onNotFound(() => {
+        done('onNotFound, but onNoContent defined')
+    })
+    .onClientError(() => {
+        done('onClientError, but onNoContent defined')
+    })
+    .onServerError(() => {
+        done('onClientError, but onNoContent defined')
+    })
+    .onNoContent(() => {
         done()
-    }
+    })
+    .onSuccess(() => {
+        done('onSuccess, but onNoContent defined')
+    })
+    .default(() => {
+        done('default, but onOk defined')
+    })
 
   })
 
