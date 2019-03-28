@@ -328,24 +328,22 @@ describe('AppContext', function () {
         })
       })
 
-      AppContext.dep5.then((dep5) => {
-        expect(dep5).to.deep.equal({
-          dep3: 'dependency-3',
-          dep4: {
-            dep1: {
-              content: 'dependency-1'
-            },
-            dep2: {
-              dep3: 'dependency-3',
-              content: 'dependency-2'
-            },
-            content: 'dependency-4'
+      expect(AppContext.dep5).to.deep.equal({
+        dep3: 'dependency-3',
+        dep4: {
+          dep1: {
+            content: 'dependency-1'
           },
-          content: 'dependency-5'
-        })
-
-        done()
+          dep2: {
+            dep3: 'dependency-3',
+            content: 'dependency-2'
+          },
+          content: 'dependency-4'
+        },
+        content: 'dependency-5'
       })
+
+      done()
     })
   })
 })
