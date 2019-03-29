@@ -9,6 +9,7 @@ import { OverviewComponent } from './overview/overview.component';
 import { StoreComponent } from './store/store.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { LogoComponent } from './logo/logo.component';
+import { BackendCardComponent } from './backend-card/backend-card.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { LogoComponent } from './logo/logo.component';
     StoreComponent,
     NavbarComponent,
     LogoComponent,
+    BackendCardComponent,
   ],
   imports: [
     BrowserModule,
