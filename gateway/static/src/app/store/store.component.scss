@@ -1,3 +1,18 @@
-.bg-purple {
-    background: var(--purple);
+.container {
+    margin-top: 1.5rem;
+}
+
+svg {
+    margin-top: 10% !important;
+}
+
+.green {
+    background: rgba(8, 224, 73, 0.75);
+}
+
+logo {
+    padding: 5px;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    margin-right: 20px;
 }

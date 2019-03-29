@@ -12,9 +12,7 @@ export class LogoComponent implements OnInit {
   ngOnInit() {
   }
 
-  @Input() width: number = 50;
-  @Input() height: number = 70;
+  @Input() size: string = '100%';
   @Input() color: string = 'white';
-  @Input() fill: string = 'white';
 
 }
