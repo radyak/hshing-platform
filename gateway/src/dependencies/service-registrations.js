@@ -1,9 +1,9 @@
 
 Dependency('ConfigService', require('../util/ConfigService'))
 
-Provider('DockerContainerService', () => {
-  const DockerContainerService = require('../service/DockerContainerService')
-  return DockerContainerService
+Provider('DockerContainerClient', () => {
+  const DockerContainerClient = require('../client/DockerContainerClient')
+  return new DockerContainerClient()
 })
 
 Provider('PasswordHashService', () => {

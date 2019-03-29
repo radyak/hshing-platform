@@ -1,34 +1,23 @@
-
-function fallbackCallback(request) {
-    throw new Error(`No matching callback or default defined for status ${request.statusCode}`)
-}
-
-
-
 class RestEvent {
 
-    constructor(request, error, errorCallback) {
-        this.request = request
+    constructor(response, error) {
+        this.response = response
         this.finished = false
         this.error = error
-        if (error) {
-            this.onGeneralError(errorCallback)
-        } 
     }
 
     matches(status) {
-        var actualStatus = this.request.statusCode + ''
+
+        var actualStatus = this.response.statusCode + ''
         var actualStatusMatcher = actualStatus.substring(0, 1) + '**'
         var statusMatcher = status + ''
-
-        console.log(`comparing: ${actualStatus}/${actualStatusMatcher} == ${statusMatcher}`)
 
         return statusMatcher === actualStatus || statusMatcher === actualStatusMatcher
     }
 
     executeIfMathing(status, callback) {
         if (!this.finished && this.matches(status)) {
-            callback(this.request, this.error)
+            callback(this.response, this.error)
             this.finished = true
         }
         return this
@@ -38,8 +27,8 @@ class RestEvent {
      * On Error (e.g. network failures)
      */
     onGeneralError(callback) {
-        if (callback) {
-            this.finished = !callback(this.request, this.error)
+        if (!this.finished && callback) {
+            callback(this.response, this.error)
         }
         return this
     }
@@ -50,7 +39,7 @@ class RestEvent {
      */
     default(callback) {
         if (!this.finished) {
-            callback(this.request)
+            callback(this.response)
         }
         return this
     }
