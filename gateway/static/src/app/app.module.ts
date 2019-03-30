@@ -10,6 +10,7 @@ import { StoreComponent } from './store/store.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { LogoComponent } from './logo/logo.component';
 import { BackendCardComponent } from './backend-card/backend-card.component';
+import { BackendDetailsComponent } from './backend-details/backend-details.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { BackendCardComponent } from './backend-card/backend-card.component';
     NavbarComponent,
     LogoComponent,
     BackendCardComponent,
+    BackendDetailsComponent
   ],
   imports: [
     BrowserModule,
