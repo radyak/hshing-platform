@@ -1,11 +1,6 @@
 
 Dependency('ConfigService', require('../util/ConfigService'))
 
-Provider('DockerContainerClient', () => {
-  const DockerContainerClient = require('../client/DockerContainerClient')
-  return new DockerContainerClient()
-})
-
 Provider('PasswordHashService', () => {
   const PasswordHashService = require('../service/PasswordHashService')
   return PasswordHashService
@@ -39,4 +34,14 @@ Provider('AuthService', (ClientsService, TokenService, UserService, Authorizatio
 Provider('BackendConfigurationService', () => {
   const DummyBackendConfigurationService = require('../service/DummyBackendConfigurationService')
   return new DummyBackendConfigurationService()
+})
+
+Provider('DockerContainerClient', () => {
+  const DockerContainerClient = require('../client/DockerContainerClient')
+  return new DockerContainerClient()
+})
+
+Provider('BackendsService', (BackendConfigurationService, DockerContainerClient) => {
+  const BackendsService = require('../service/BackendsService')
+  return new BackendsService(BackendConfigurationService, DockerContainerClient)
 })

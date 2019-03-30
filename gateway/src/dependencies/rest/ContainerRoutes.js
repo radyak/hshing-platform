@@ -3,24 +3,12 @@ var router = express.Router()
 var RestEvent = require('../../service/model/RestEvent')
 
 
-Configuration('ContainerRoutes', (DockerContainerClient) => {
+Configuration('ContainerRoutes', (DockerContainerClient, BackendsService) => {
+
 
   router.get('/', (request, response) => {
-    DockerContainerClient.getAllContainerDetails().then((res) => {
-      var event = new RestEvent(res)
-      event
-        .onNotFound(() => {
-          response.status(404).send({message: `Container ${name} not found`})
-        })
-        .onServerError((err) => {
-          response.status(500).send({
-            message: `An error occurred`,
-            error: err
-          })
-        })
-        .default(() => {
-          response.status(200).send(res.body)
-        })
+    BackendsService.getAll().then((containers) => {
+      response.status(200).send(containers)
     }).catch((err) => {
       response.status(500).send({
         message: `An error occurred`,
@@ -31,21 +19,14 @@ Configuration('ContainerRoutes', (DockerContainerClient) => {
 
   router.get('/:name', (request, response) => {
     const name = request.params.name
-    DockerContainerClient.getContainerDetails(name).then((res) => {
-      var event = new RestEvent(res)
-      event
-        .onNotFound(() => {
-          response.status(404).send({message: `Container ${name} not found`})
+    BackendsService.get(name).then((container) => {
+      if (!container) {
+        response.status(404).send({
+          message: `Container ${name} not found`
         })
-        .onServerError((err) => {
-          response.status(500).send({
-            message: `An error occurred`,
-            error: err
-          })
-        })
-        .default(() => {
-          response.status(200).send(res.body)
-        })
+        return
+      }
+      response.status(200).send(container)
     }).catch((err) => {
       response.status(500).send({
         message: `An error occurred`,
@@ -56,25 +37,14 @@ Configuration('ContainerRoutes', (DockerContainerClient) => {
 
   router.post('/:name/stop', (request, response) => {
     const name = request.params.name
-    console.log(`Trying to stop container ${name}`)
-    DockerContainerClient.stopContainer(name).then((res) => {
-      var event = new RestEvent(res)
-      event
-        .onNotFound(() => {
-          response.status(404).send({message: `Container ${name} not found`})
+    BackendsService.stop(name).then((container) => {
+      if (container === null) {
+        response.status(404).send({
+          message: `Container ${name} not found`
         })
-        .onNotModified(() => {
-          response.status(304).send({message: `Container ${name} already stopped`})
-        })
-        .onServerError((err) => {
-          response.status(500).send({
-            message: `An error occurred`,
-            error: err
-          })
-        })
-        .default(() => {
-          response.status(200).send({message: `Container ${name} stopped`})
-        })
+        return
+      }
+      response.status(200).send(container)
     }).catch((err) => {
       response.status(500).send({
         message: `An error occurred`,
@@ -85,25 +55,14 @@ Configuration('ContainerRoutes', (DockerContainerClient) => {
 
   router.post('/:name/start', (request, response) => {
     const name = request.params.name
-    console.log(`Trying to start container ${name}`)
-    DockerContainerClient.startContainer(name).then((res) => {
-      var event = new RestEvent(res)
-      event
-        .onNotFound(() => {
-          response.status(404).send({message: `Container ${name} not found`})
+    BackendsService.start(name).then((container) => {
+      if (container === null) {
+        response.status(404).send({
+          message: `Container ${name} not found`
         })
-        .onNotModified(() => {
-          response.status(304).send({message: `Container ${name} already started`})
-        })
-        .onServerError((err) => {
-          response.status(500).send({
-            message: `An error occurred`,
-            error: err
-          })
-        })
-        .default(() => {
-          response.status(200).send({message: `Container ${name} started`})
-        })
+        return
+      }
+      response.status(200).send(container)
     }).catch((err) => {
       response.status(500).send({
         message: `An error occurred`,

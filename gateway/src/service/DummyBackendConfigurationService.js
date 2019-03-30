@@ -1,23 +1,30 @@
 var config = {
-    "test1": {
+    "portainer": {
+        "host": "portainer",
+        "port": 9000,
+        "label": "Portainer",
+        "description": "Client w/ UI to inspect and manage Docker containers"
+    },
+    "mongodb": {
+        "label": "Persistence",
+        "description": "This Home Sweet Host's database"
+    },
+    "test-app": {
+        "label": "Test-App",
+        "description": "Some sample app",
         "host": "test-app",
         "port": 3210
     },
-    "test2": {
-        "host": "portainer",
-        "port": 9000
-    },
-    "mongoclient": { }
+    "mongoclient": {
+        "label": "Mongo DB Client",
+        "description": "Client w/ UI to work with Mongo DB",
+    }
 }
 
 class DummyBackendConfigurationService {
 
     getBackendConfiguration(name) {
-        const backendConfig = config[name];
-        if (!backendConfig) {
-            throw new Error(`No service with name ${name} registered`)
-        }
-        return backendConfig
+        return config[name];
     }
 
     registerBackend(name, config) {

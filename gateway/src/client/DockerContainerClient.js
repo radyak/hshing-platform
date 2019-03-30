@@ -8,6 +8,8 @@ class DockerContainerClient {
   request(options) {
     options.url = options.url || `${BASE_URL}${options.path}`
     delete options.path
+    options.headers = options.headers || {}
+    options.headers.Host = 'localhost'
     return new Promise((resolve, reject) => {
       request(options, (err, res) => {
         if (err) {
@@ -21,40 +23,28 @@ class DockerContainerClient {
   getAllContainerDetails() {
     return this.request({
       method: 'GET',
-      path: `/containers/json`,
-      headers: {
-        'Host': 'localhost'
-      }
+      path: `/containers/json`
     })
   }
 
   getContainerDetails(name) {
     return this.request({
       method: 'GET',
-      path: `/containers/${name}/json`,
-      headers: {
-        'Host': 'localhost'
-      }
+      path: `/containers/${name}/json`
     })
   }
 
   stopContainer(name) {
     return this.request({
       method: 'POST',
-      path: `/containers/${name}/stop`,
-      headers: {
-        'Host': 'localhost'
-      }
+      path: `/containers/${name}/stop`
     })
   }
 
   startContainer(name) {
     return this.request({
       method: 'POST',
-      path: `/containers/${name}/start`,
-      headers: {
-        'Host': 'localhost'
-      }
+      path: `/containers/${name}/start`
     })
   }
 
