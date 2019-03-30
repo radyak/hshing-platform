@@ -14,15 +14,14 @@ export class BackendCardComponent implements OnInit {
 
   private map = {
     'green': 'rgb(8, 224, 73)',
-    'red': 'rgb(224, 8, 73)'
+    'red': 'rgb(224, 8, 73)',
+    'default': 'rgb(224, 224, 224)'
   };
 
-  @Input() name: string;
-  @Input() color: string;
+  @Input() backend: any;
 
   getColor() {
-    console.log(this.color)
-    return this.map[this.color]
+    return this.map[this.backend.status.indicator] || this.map['default']
   }
 
 }

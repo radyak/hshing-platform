@@ -1,13 +1,17 @@
-<div class="container details green">
+<div class="container details" [ngClass]="backend.status.indicator">
   <div class="details-header">
     <h1>
-      Test-App
-      <logo color="green" size="100"></logo>
+      {{ backend.label }}
+      <logo [color]="'green'" size="100"></logo>
     </h1>
   </div>
 
   <section>
     <div class="d-flex justify-content-between align-items-center">
+      <button type="button" class="btn btn-lg btn-outline-secondary" (click)="goBack()">
+        <fa name="arrow-circle-left" class="fa"></fa>
+        Back
+      </button>
       <button type="button" class="btn btn-lg btn-outline-secondary">
         <fa name="stop" class="fa"></fa>
         Stop
@@ -21,21 +25,16 @@
   
   <section>
     <h2>
-      <fa name="database" class="fa"></fa>
-      Stats
+      Summary
     </h2>
     <table class="table">
         <tr>
           <td>State:</td>
-          <td>Running</td>
+          <td>{{ backend.status.state }}</td>
         </tr>
         <tr>
-          <td>State:</td>
-          <td>Running</td>
-        </tr>
-        <tr>
-          <td>State:</td>
-          <td>Running</td>
+          <td>Description:</td>
+          <td>{{ backend.description }}</td>
         </tr>
     </table>
   </section>

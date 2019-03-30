@@ -8,7 +8,7 @@ const routes: Routes = [
   {path: '', component: OverviewComponent},
   {path: 'overview', component: OverviewComponent},
   {path: 'store', component: StoreComponent},
-  {path: 'details', component: BackendDetailsComponent}
+  {path: 'details/:name', component: BackendDetailsComponent}
 ];
 
 @NgModule({
