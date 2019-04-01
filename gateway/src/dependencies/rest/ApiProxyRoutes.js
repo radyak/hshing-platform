@@ -18,6 +18,10 @@ Configuration('ApiProxyRoutes', (BackendConfigurationService) => {
 
           var backendConfig = BackendConfigurationService.getBackendConfiguration(backendName)
 
+          if (!backendConfig) {
+            return null
+          }
+
           var host = backendConfig.host || backendName
           var port = backendConfig.port || DEFAULT_PORT
 

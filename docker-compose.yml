@@ -54,6 +54,7 @@ services:
   #   network_mode: host
 
   portainer:
+    container_name: portainer
     image: portainer/portainer
     ports:
       - "9000:9000"

@@ -96,6 +96,7 @@ class BackendsService {
     mapContainerData(raw) {
         raw = JSON.parse(raw)
         let metaInformation = this.BackendConfigurationService.getBackendConfiguration(raw.Name.substring(1)) || {}
+        var name = raw.Name.substring(1)
         return {
             created: raw.Created,
             status: {
@@ -105,25 +106,38 @@ class BackendsService {
             },
             description: metaInformation.description,
             label: metaInformation.label,
-            name: raw.Name.substring(1)
+            name: name,
+            entry: metaInformation.entry !== undefined ? `/api/${name}/${metaInformation.entry}` : undefined
         }
     }
 
-    mapAllContainerData(raw) {
+    mapAllContainerData(raw, showUnknown = false) {
         raw = JSON.parse(raw)
         var result = []
         for (let container of raw) {
             let name = container.Names[0].substring(1)
-            let metaInformation = this.BackendConfigurationService.getBackendConfiguration(name) || {}
-            result.push({
-                status: {
-                    state: container.State,
-                    indicator: indicatorMap[container.State] || "gray"
-                },
-                name: name,
-                description: metaInformation.description,
-                label: metaInformation.label
-            })
+            let metaInformation = this.BackendConfigurationService.getBackendConfiguration(name)
+            if (metaInformation) {
+                result.push({
+                    status: {
+                        state: container.State,
+                        indicator: indicatorMap[container.State] || "gray"
+                    },
+                    name: name,
+                    description: metaInformation.description,
+                    label: metaInformation.label
+                })
+            } else if (showUnknown) {
+                result.push({
+                    status: {
+                        state: container.State,
+                        indicator: indicatorMap[container.State] || "gray"
+                    },
+                    name: name,
+                    description: 'n/a',
+                    label: name
+                })
+            }
         }
         return result
     }

@@ -11,19 +11,19 @@ export class DockerContainerService {
   constructor(private http: HttpClient) { }
 
   getContainers(): Observable<DockerContainer[]> {
-    return this.http.get<DockerContainer[]>('http://localhost:3001/api/containers')
+    return this.http.get<DockerContainer[]>('/api/containers')
   }
 
   getContainer(name: string): Observable<DockerContainer> {
-    return this.http.get<DockerContainer>(`http://localhost:3001/api/containers/${name}`)
+    return this.http.get<DockerContainer>(`/api/containers/${name}`)
   }
 
   stopContainer(name: string): Observable<DockerContainer> {
-    return this.http.post<DockerContainer>(`http://localhost:3001/api/containers/${name}/stop`, {})
+    return this.http.post<DockerContainer>(`/api/containers/${name}/stop`, {})
   }
 
   startContainer(name: string): Observable<DockerContainer> {
-    return this.http.post<DockerContainer>(`http://localhost:3001/api/containers/${name}/start`, {})
+    return this.http.post<DockerContainer>(`/api/containers/${name}/start`, {})
   }
 
 }

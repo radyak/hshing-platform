@@ -3,22 +3,35 @@ var config = {
         "host": "portainer",
         "port": 9000,
         "label": "Portainer",
-        "description": "Client w/ UI to inspect and manage Docker containers"
-    },
-    "mongodb": {
-        "label": "Persistence",
-        "description": "This Home Sweet Host's database"
+        "description": "Client w/ UI to inspect and manage Docker containers",
+        "entry": ""
     },
     "test-app": {
         "label": "Test-App",
         "description": "Some sample app",
         "host": "test-app",
-        "port": 3210
+        "port": 3210,
+        "entry": ""
     },
     "mongoclient": {
         "label": "Mongo DB Client",
         "description": "Client w/ UI to work with Mongo DB",
-    }
+        "host": "mongoclient",
+        "port": 3000,
+        "entry": ""
+    },
+    // "mongodb": {
+    //     "label": "Persistence",
+    //     "description": "This Home Sweet Host's database",
+    //     "host": "mongodb",
+    //     "port": 3000
+    // },
+    // "gateway": {
+    //     "label": "Gateway",
+    //     "description": "This App",
+    //     "host": "gateway",
+    //     "port": 3000
+    // }
 }
 
 class DummyBackendConfigurationService {
