@@ -20,10 +20,13 @@ class DockerContainerClient {
     })
   }
 
-  getAllContainerDetails() {
+  getAllContainerDetails(onlyRunning = false) {
+    let qs = {}
+    qs.all = (onlyRunning ? 0 : 1)
     return this.request({
       method: 'GET',
-      path: `/containers/json`
+      path: `/containers/json`,
+      qs: qs
     })
   }
 

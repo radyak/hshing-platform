@@ -12,9 +12,13 @@
         <fa name="arrow-circle-left" class="fa"></fa>
         Back
       </button>
-      <button type="button" class="btn btn-lg btn-outline-secondary">
+      <button type="button" class="btn btn-lg btn-outline-secondary" *ngIf="isRunning()" (click)="stop()">
         <fa name="stop" class="fa"></fa>
         Stop
+      </button>
+      <button type="button" class="btn btn-lg btn-outline-secondary" *ngIf="!isRunning()" (click)="start()">
+        <fa name="play" class="fa"></fa>
+        Start
       </button>
       <button type="button" class="btn btn-lg btn-outline-secondary">
         <fa name="trash" class="fa"></fa>

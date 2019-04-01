@@ -1,6 +1,5 @@
 var express = require('express')
 var router = express.Router()
-var RestEvent = require('../../service/model/RestEvent')
 
 
 Configuration('ContainerRoutes', (DockerContainerClient, BackendsService) => {

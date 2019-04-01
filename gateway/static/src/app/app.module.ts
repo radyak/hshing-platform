@@ -11,6 +11,8 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { LogoComponent } from './logo/logo.component';
 import { BackendCardComponent } from './backend-card/backend-card.component';
 import { BackendDetailsComponent } from './backend-details/backend-details.component';
+import { DockerContainerService } from './service/docker-container.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -26,9 +28,12 @@ import { BackendDetailsComponent } from './backend-details/backend-details.compo
     BrowserModule,
     AppRoutingModule,
     NgbModule,
-    AngularFontAwesomeModule
+    AngularFontAwesomeModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [
+    DockerContainerService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
