@@ -28,7 +28,7 @@ services:
     container_name: test-app
     image: radyak/test-app
     environment:
-      - PORT=3000
+      - PORT=3210
   
   mongodb:
     container_name: mongodb

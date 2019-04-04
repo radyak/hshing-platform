@@ -1,18 +1,16 @@
 # Open Issues
 
-## Minor
-
-- [x] Use `request` for `DynNSUpdater` instead of `simple-get`
-
 ## App Management
 
-- [ ] Develop an _App management_ (container/stack management)
+- [x] Develop an own MongoDB ARM32 image
+- [ ] Implement app installation, update and uninstallation
 - [ ] Develop concept for app stacks
-- [ ] Develop an own MongoDB ARM32 image
+- [ ] Develop an _App management_ (container/stack management)
 
 ## Bootstrap
 
 - [x] Use _Context Profiles_
+- [ ] Evaluate DNS resonse (badauth, nochg etc.)
 - [ ] _Start Docker Swarm_ on machine startup
 - [ ] Develop routine for _first startup_ of unconfigured cluster
   - [ ] Set up root user in database
@@ -22,16 +20,14 @@
 
 ## Project structure
 
+- [ ] Consolidate project for development (debugging) and "production"
 - [ ] Refactor gateway build (frontend & backend)
-
-## Misc
-
-- [ ] Use App-Information (port, required roles etc.) for proxying requests
-- [ ] _Tests_ (use Mock MongoDB)
-- [ ] _Validations_/central model
 
 ## Security & Configuration
 
+- [ ] User management
+- [ ] Login
+- [ ] Secure Admin routes with jwt and roles middleware
 - [ ] Develop rock-solid _management for config & secrets_ (Docker Swarm?)
   - [ ] Encryption key?
   - [ ] MongoDB credentials (per database and/or multitenancy)
@@ -44,3 +40,12 @@
 - [ ] Add/complete _JsDoc_
 - [ ] _Extend Docs_, add diagrams for most important flows
 
+## Minor
+
+- [x] Use `request` for `DynNSUpdater` instead of `simple-get`
+
+## Misc
+
+- [x] Use App-Information (port, required roles etc.) for proxying requests
+- [ ] _Tests_ (use Mock MongoDB)
+- [ ] _Validations_/central model

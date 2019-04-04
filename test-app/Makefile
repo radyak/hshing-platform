@@ -1,5 +1,5 @@
 #!make
-include ../.build-parameters
+include ../.env
 export
 
 IMAGE=test-app
