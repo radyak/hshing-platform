@@ -36,12 +36,12 @@ Provider('BackendConfigurationService', () => {
   return new DummyBackendConfigurationService()
 })
 
-Provider('DockerContainerClient', () => {
-  const DockerContainerClient = require('../client/DockerContainerClient')
-  return new DockerContainerClient()
+Provider('DockerApiClient', () => {
+  const DockerApiClient = require('../client/DockerApiClient')
+  return new DockerApiClient()
 })
 
-Provider('BackendsService', (BackendConfigurationService, DockerContainerClient) => {
+Provider('BackendsService', (BackendConfigurationService, DockerApiClient) => {
   const BackendsService = require('../service/BackendsService')
-  return new BackendsService(BackendConfigurationService, DockerContainerClient)
+  return new BackendsService(BackendConfigurationService, DockerApiClient)
 })

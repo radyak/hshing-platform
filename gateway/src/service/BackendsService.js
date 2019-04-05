@@ -7,13 +7,13 @@ const indicatorMap = {
 
 class BackendsService {
 
-    constructor(BackendConfigurationService, DockerContainerClient) {
+    constructor(BackendConfigurationService, DockerApiClient) {
         this.BackendConfigurationService = BackendConfigurationService
-        this.DockerContainerClient = DockerContainerClient
+        this.DockerApiClient = DockerApiClient
     }
 
     getAll() {
-        return this.DockerContainerClient.getAllContainerDetails().then((res) => {
+        return this.DockerApiClient.getAllContainerDetails().then((res) => {
             if (res.statusCode >= 500) {
                 throw new Error({
                     message: `An error occurred`,
@@ -30,7 +30,7 @@ class BackendsService {
     }
 
     get(backendName) {
-        return this.DockerContainerClient.getContainerDetails(backendName).then((res) => {
+        return this.DockerApiClient.getContainerDetails(backendName).then((res) => {
 
             if (res.statusCode == 404) {
                 return null
@@ -51,7 +51,7 @@ class BackendsService {
     }
 
     start(backendName) {
-        return this.DockerContainerClient.startContainer(backendName).then((res) => {
+        return this.DockerApiClient.startContainer(backendName).then((res) => {
             if (res.statusCode == 404) {
                 return null
             }
@@ -71,7 +71,7 @@ class BackendsService {
     }
 
     stop(backendName) {
-        return this.DockerContainerClient.stopContainer(backendName).then((res) => {
+        return this.DockerApiClient.stopContainer(backendName).then((res) => {
             if (res.statusCode == 404) {
                 return null
             }

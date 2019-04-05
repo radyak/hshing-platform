@@ -12,11 +12,7 @@ RUN npm install
 
 COPY ./static ./
 
-RUN ls -la
-
 RUN npm run build
-
-RUN ls -la
 
 
 

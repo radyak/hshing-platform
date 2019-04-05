@@ -3,7 +3,7 @@ const request = require('request')
 const BASE_URL = 'http://unix:/var/run/docker.sock:/v' + (process.env.DOCKER_API_VERSION || '1.30')
 
 
-class DockerContainerClient {
+class DockerApiClient {
 
   request(options) {
     options.url = options.url || `${BASE_URL}${options.path}`
@@ -53,4 +53,4 @@ class DockerContainerClient {
 
 }
 
-module.exports = DockerContainerClient
+module.exports = DockerApiClient

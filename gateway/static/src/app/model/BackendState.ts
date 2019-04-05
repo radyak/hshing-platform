@@ -1,4 +1,4 @@
-export interface DockerContainerState {
+export interface BackendState {
 
     state: string;
     indicator: string
