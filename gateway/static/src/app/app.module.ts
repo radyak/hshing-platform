@@ -11,7 +11,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { LogoComponent } from './logo/logo.component';
 import { BackendCardComponent } from './backend-card/backend-card.component';
 import { BackendDetailsComponent } from './backend-details/backend-details.component';
-import { DockerContainerService } from './service/docker-container.service';
+import { BackendsService } from './service/backends.service';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
@@ -32,7 +32,7 @@ import { HttpClientModule } from '@angular/common/http';
     HttpClientModule
   ],
   providers: [
-    DockerContainerService
+    BackendsService
   ],
   bootstrap: [AppComponent]
 })

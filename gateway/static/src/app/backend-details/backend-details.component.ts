@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { DockerContainerService } from '../service/docker-container.service';
-import { DockerContainer } from '../model/DockerContainer';
+import { BackendsService } from '../service/backends.service';
+import { Backend } from '../model/Backend';
 
 @Component({
   selector: 'backend-details',
@@ -23,7 +23,7 @@ export class BackendDetailsComponent implements OnInit {
 
   constructor(
     private location: Location,
-    private dockerContainerService: DockerContainerService,
+    private backendsService: BackendsService,
     private route: ActivatedRoute) { }
 
   ngOnInit() {
@@ -32,22 +32,22 @@ export class BackendDetailsComponent implements OnInit {
 
   update(): void {
     let name: string = this.route.snapshot.params['name']
-    this.dockerContainerService.getContainer(name).subscribe((container: DockerContainer) => {
-      this.backend = container
+    this.backendsService.getBackend(name).subscribe((backend: Backend) => {
+      this.backend = backend
     })
   }
 
   stop(): void {
     let name: string = this.route.snapshot.params['name']
-    this.dockerContainerService.stopContainer(name).subscribe((container: DockerContainer) => {
-      this.backend = container
+    this.backendsService.stopBackend(name).subscribe((backend: Backend) => {
+      this.backend = backend
     })
   }
 
   start(): void {
     let name: string = this.route.snapshot.params['name']
-    this.dockerContainerService.startContainer(name).subscribe((container: DockerContainer) => {
-      this.backend = container
+    this.backendsService.startBackend(name).subscribe((backend: Backend) => {
+      this.backend = backend
     })
   }
 

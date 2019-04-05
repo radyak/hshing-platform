@@ -17,7 +17,7 @@ Provider('App', (AuthRoutes, ApiProxyRoutes, AdminRoutes, ContainerRoutes) => {
   })
 
   app.use('/api/admin', bodyParser.json(), AdminRoutes)
-  app.use('/api/containers', bodyParser.json(), ContainerRoutes)
+  app.use('/api/backends', bodyParser.json(), ContainerRoutes)
   app.use('/api/auth', bodyParser.json(), AuthRoutes)
 
   app.use('/api', ApiProxyRoutes)

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { DockerContainerService } from '../service/docker-container.service';
-import { DockerContainer } from '../model/DockerContainer';
+import { BackendsService } from '../service/backends.service';
+import { Backend } from '../model/Backend';
 
 @Component({
   selector: 'overview',
@@ -10,9 +10,9 @@ import { DockerContainer } from '../model/DockerContainer';
 })
 export class OverviewComponent implements OnInit {
 
-  private backends: DockerContainer[];
+  private backends: Backend[];
 
-  constructor(private router: Router, private dockerContainerService: DockerContainerService) {
+  constructor(private router: Router, private backendsService: BackendsService) {
   }
 
   ngOnInit() {
@@ -20,8 +20,8 @@ export class OverviewComponent implements OnInit {
   }
 
   update() {
-    this.dockerContainerService.getContainers().subscribe((containers: DockerContainer[]) => {
-      this.backends = containers
+    this.backendsService.getBackends().subscribe((backends: Backend[]) => {
+      this.backends = backends
     })
   }
 

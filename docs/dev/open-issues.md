@@ -18,9 +18,11 @@
   - [ ] Require an validated main configuration before server start
 - [ ] _Automatic port forwardings_ on connected router (Problem: Docker uses its own default gateway, not directly the router)
 
-## Project structure
+## Project (structure)
 
+- [ ] Use TypeScript
 - [ ] Consolidate project for development (debugging) and "production"
+  - [x] Live-Reload for Nodemon
 - [ ] Refactor gateway build (frontend & backend)
 
 ## Security & Configuration
