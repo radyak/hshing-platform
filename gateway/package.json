@@ -10,7 +10,7 @@
   "scripts": {
     "test": "mocha --recursive",
     "start": "node index.js",
-    "watch": "nodemon ./index.js localhost"
+    "watch": "nodemon --signal SIGHUP ./index.js localhost"
   },
   "author": "florian.vogel84@gmx.net",
   "license": "ISC",

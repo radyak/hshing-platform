@@ -17,6 +17,9 @@ Provider('Server', (config, App) => {
     start: () => {
       server.listen(80, 443)
       console.log(`Listening on ports 80, 443`)
+    },
+    stop: () => {
+      console.log(`Stop not implemented for greenlock`)
     }
   }
 })
@@ -24,11 +27,25 @@ Provider('Server', (config, App) => {
 
 Provider('Server', (config, App) => {
   console.log('Using unsecured HTTP traffic - FOR DEVELOPMENT ONLY')
+
+  var startPromise
+  var server
+
   return {
     start: () => {
-      var port = process.env.PORT || 80
-      App.listen(port)
-      console.log(`Listening on port ${port}`)
+      startPromise = new Promise((resolve, reject) => {
+        var port = process.env.PORT || 80
+        server = App.listen(port, () => {
+          console.log(`Server listening on port ${port}`)
+          resolve({port: port})
+        })
+      })
+    },
+    stop: () => {
+      startPromise.then((portConfig) => {
+        console.log(`Stopping server`)
+        server.close()
+      })
     }
   }
 }, 'dev')
