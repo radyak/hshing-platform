@@ -24,7 +24,7 @@ class BackendsService {
             return this.mapAllContainerData(res.body)
 
         }).catch((err) => {
-            console.log(`Error while retrieving details of all containers`, err)
+            console.log(`Error while retrieving details of all backends`, err)
             throw err
         })
     }
@@ -45,7 +45,7 @@ class BackendsService {
             return this.mapContainerData(res.body)
 
         }).catch((err) => {
-            console.log(`Error while retrieving details of container ${backendName}:`, err)
+            console.log(`Error while retrieving details of backend ${backendName}:`, err)
             throw err
         })
     }
@@ -65,7 +65,7 @@ class BackendsService {
             return this.get(backendName)
             
         }).catch((err) => {
-            console.log(`Error while starting container ${backendName}:`, err)
+            console.log(`Error while starting backend ${backendName}:`, err)
             throw err
         })
     }
@@ -85,7 +85,60 @@ class BackendsService {
             return this.get(backendName)
             
         }).catch((err) => {
-            console.log(`Error while stopping container ${backendName}:`, err)
+            console.log(`Error while stopping backend ${backendName}:`, err)
+            throw err
+        })
+    }
+
+    remove(backendName) {
+
+        var backendConfig = this.BackendConfigurationService.getBackendConfiguration(backendName)
+        if (!backendConfig) {
+            return null
+        }
+
+        return this.stop(backendName)
+        .then((res) => {
+            if (res && res.statusCode == 404) {
+                return null
+            }
+            if (res && res.statusCode >= 500) {
+                throw new Error({
+                    message: `An error occurred`,
+                    response: res
+                })
+            }
+
+            return this.DockerApiClient.removeContainer(backendName)
+        }).then((res) => {
+            if (res && res.statusCode >= 500) {
+                throw new Error({
+                    message: `An error occurred`,
+                    response: res
+                })
+            }
+
+            var image = backendConfig.image
+            return this.DockerApiClient.removeImage(image)
+        }).then((res) => {
+            // Also react to client errors, e.g. in case of wrong image name
+            if (res) {
+                if (res.statusCode === 404) {
+                    return null
+                }
+
+                if (res.statusCode >= 500) {
+                    throw new Error({
+                        message: `An error occurred`,
+                        response: res
+                    })
+                }
+            }
+
+            // // TODO: This doesn't feel right ...
+            return true
+        }).catch((err) => {
+            console.log(`Error while removing backend ${backendName}:`, err)
             throw err
         })
     }

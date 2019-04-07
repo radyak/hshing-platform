@@ -8,7 +8,7 @@ import { Backend } from '../model/Backend';
 })
 export class BackendsService {
 
-  private baseUrl: string = '';
+  private baseUrl: string = 'http://localhost:3001';
 
   constructor(private http: HttpClient) { }
 
@@ -26,6 +26,10 @@ export class BackendsService {
 
   startBackend(name: string): Observable<Backend> {
     return this.http.post<Backend>(`${this.baseUrl}/api/backends/${name}/start`, {})
+  }
+
+  removeBackend(name: string): Observable<Backend> {
+    return this.http.delete<Backend>(`${this.baseUrl}/api/backends/${name}`, {})
   }
 
 }

@@ -20,6 +20,12 @@ class DockerApiClient {
     })
   }
 
+
+  /**************
+   * CONTAINERS *
+   **************/
+
+  
   getAllContainerDetails(onlyRunning = false) {
     let qs = {}
     qs.all = (onlyRunning ? 0 : 1)
@@ -37,6 +43,19 @@ class DockerApiClient {
     })
   }
 
+  createContainer(config, name) {
+    return this.request({
+      method: 'POST',
+      path: `/containers/create`,
+      body: {
+        'Image': `radyak/${config.image}`,
+        'Env': [
+          
+        ]
+      }
+    })
+  }
+
   stopContainer(name) {
     return this.request({
       method: 'POST',
@@ -50,6 +69,25 @@ class DockerApiClient {
       path: `/containers/${name}/start`
     })
   }
+
+  removeContainer(name) {
+    return this.request({
+      method: 'DELETE',
+      path: `/containers/${name}`
+    })
+  }
+
+
+  /**********
+   * IMAGES *
+   **********/
+
+   removeImage(name) {
+    return this.request({
+      method: 'DELETE',
+      path: `/images/${name}`
+    })
+   }
 
 }
 

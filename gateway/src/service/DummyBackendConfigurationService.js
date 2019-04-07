@@ -4,6 +4,7 @@ var config = {
         "port": 9000,
         "label": "Portainer",
         "description": "Client w/ UI to inspect and manage Docker containers",
+        "image": "portainer/portainer",
         "entry": ""
     },
     "test-app": {
@@ -11,6 +12,7 @@ var config = {
         "description": "Some sample app",
         "host": "test-app",
         "port": 3210,
+        "image": "radyak/test-app",
         "entry": ""
     },
     "mongoclient": {
@@ -18,6 +20,7 @@ var config = {
         "description": "Client w/ UI to work with Mongo DB",
         "host": "mongoclient",
         "port": 3000,
+        "image": "mongoclient/mongoclient",
         "entry": ""
     },
     // "mongodb": {

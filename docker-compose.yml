@@ -6,6 +6,7 @@ services:
     depends_on:
       - mongodb
     container_name: gateway
+    image: radyak/gateway:latest
     build:
       context: ./gateway
       args:
@@ -26,6 +27,7 @@ services:
 
   test-app:
     container_name: test-app
+    image: radyak/test-app:latest
     build:
       context: ./test-app
       args:
