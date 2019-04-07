@@ -46,6 +46,10 @@ export class BackendDetailsComponent implements OnInit {
     })
   }
 
+  getDisabled() {
+    return this.isLoading ? 'disabled' : null;
+  }
+
   stop(): void {
     this.isLoading = true;
     let name: string = this.route.snapshot.params['name']
