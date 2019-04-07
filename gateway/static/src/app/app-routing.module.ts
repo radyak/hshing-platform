@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { OverviewComponent } from './overview/overview.component';
-import { StoreComponent } from './store/store.component';
-import { BackendDetailsComponent } from './backend-details/backend-details.component';
+import { OverviewComponent } from './views/overview/overview.component';
+import { StoreComponent } from './views/store/store.component';
+import { BackendDetailsComponent } from './views/backend-details/backend-details.component';
 
 const routes: Routes = [
   {path: '', component: OverviewComponent},

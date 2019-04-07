@@ -5,13 +5,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
-import { OverviewComponent } from './overview/overview.component';
-import { StoreComponent } from './store/store.component';
-import { NavbarComponent } from './navbar/navbar.component';
-import { LogoComponent } from './logo/logo.component';
-import { BackendCardComponent } from './backend-card/backend-card.component';
-import { BackendDetailsComponent } from './backend-details/backend-details.component';
-import { BackendsService } from './service/backends.service';
+import { OverviewComponent } from './views/overview/overview.component';
+import { StoreComponent } from './views/store/store.component';
+import { BackendDetailsComponent } from './views/backend-details/backend-details.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { LogoComponent } from './components/logo/logo.component';
+import { BackendCardComponent } from './components/backend-card/backend-card.component';
+import { LoadingBarComponent } from './components/loading-bar/loading-bar.component';
+import { BackendsService } from './services/backends.service';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
@@ -22,7 +23,8 @@ import { HttpClientModule } from '@angular/common/http';
     NavbarComponent,
     LogoComponent,
     BackendCardComponent,
-    BackendDetailsComponent
+    BackendDetailsComponent,
+    LoadingBarComponent
   ],
   imports: [
     BrowserModule,

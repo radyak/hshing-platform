@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { BackendsService } from '../service/backends.service';
-import { Backend } from '../model/Backend';
+import { BackendsService } from '../../services/backends.service';
+import { Backend } from '../../model/Backend';
 
 @Component({
   selector: 'overview',
