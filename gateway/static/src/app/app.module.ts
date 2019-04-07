@@ -14,6 +14,7 @@ import { BackendCardComponent } from './components/backend-card/backend-card.com
 import { LoadingBarComponent } from './components/loading-bar/loading-bar.component';
 import { BackendsService } from './services/backends.service';
 import { HttpClientModule } from '@angular/common/http';
+import { ModalComponent } from './components/modal/modal.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { HttpClientModule } from '@angular/common/http';
     LogoComponent,
     BackendCardComponent,
     BackendDetailsComponent,
-    LoadingBarComponent
+    LoadingBarComponent,
+    ModalComponent
   ],
   imports: [
     BrowserModule,
@@ -36,6 +38,9 @@ import { HttpClientModule } from '@angular/common/http';
   providers: [
     BackendsService
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [
+    ModalComponent
+  ]
 })
 export class AppModule { }

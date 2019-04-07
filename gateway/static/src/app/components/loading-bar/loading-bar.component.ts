@@ -15,7 +15,6 @@ export class LoadingBarComponent implements OnInit {
   @Input() isLoading: boolean = false;
 
   getClass() {
-    console.log(`isLoading=${this.isLoading}`)
     return this.isLoading ? 'is-loading' : ''
   }
 

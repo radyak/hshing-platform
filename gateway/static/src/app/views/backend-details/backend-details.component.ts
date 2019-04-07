@@ -3,6 +3,8 @@ import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BackendsService } from '../../services/backends.service';
 import { Backend } from '../../model/Backend';
+import { ModalService } from '../../components/modal.service';
+import { ModalOptions } from 'src/app/components/modal-options';
 
 @Component({
   selector: 'backend-details',
@@ -28,7 +30,8 @@ export class BackendDetailsComponent implements OnInit {
     private location: Location,
     private backendsService: BackendsService,
     private route: ActivatedRoute,
-    private router: Router) { }
+    private router: Router,
+    private modal: ModalService) { }
 
   ngOnInit() {
     this.update()
@@ -61,7 +64,22 @@ export class BackendDetailsComponent implements OnInit {
     })
   }
 
-  remove(): void {
+  remove() {
+    const modalOptions: ModalOptions = {
+      title: `Remove ${this.backend.label}`,
+      message: `Do you really want to remove the backend ${this.backend.label}?`
+    }
+
+    this.modal.open(modalOptions).then((result) => {
+      if (result) {
+        this.onConfirmRemove()
+      }
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
+  onConfirmRemove() {
     this.isLoading = true;
     let name: string = this.route.snapshot.params['name']
     this.backendsService.removeBackend(name).subscribe((backend: Backend) => {
