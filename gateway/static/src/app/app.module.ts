@@ -15,6 +15,7 @@ import { LoadingBarComponent } from './components/loading-bar/loading-bar.compon
 import { BackendsService } from './services/backends.service';
 import { HttpClientModule } from '@angular/common/http';
 import { ModalComponent } from './components/modal/modal.component';
+import { StoreItemComponent } from './components/store-item/store-item.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { ModalComponent } from './components/modal/modal.component';
     BackendCardComponent,
     BackendDetailsComponent,
     LoadingBarComponent,
-    ModalComponent
+    ModalComponent,
+    StoreItemComponent
   ],
   imports: [
     BrowserModule,

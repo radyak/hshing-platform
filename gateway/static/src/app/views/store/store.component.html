@@ -5,11 +5,8 @@
     App Store
   </h1>
   
-  <div class="d-flex p-3 my-3 text-white-50 green rounded store-item">
-    <logo size="100"></logo>
-    <div>
-      <h2 class="mb-0 text-white">New App</h2>
-      <div class="description">Description</div>
-    </div>
-  </div>
+  <store-item [isActive]="true"></store-item>
+  <store-item [isActive]="true" [isInstalled]="true"></store-item>
+  <store-item [isActive]="false"></store-item>
+
 </div>
