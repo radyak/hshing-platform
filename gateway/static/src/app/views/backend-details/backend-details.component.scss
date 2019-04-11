@@ -1,3 +1,6 @@
+@import "../../../variables.scss";
+
+
 .container {
     padding: 0 !important;
 }
@@ -17,7 +20,7 @@
     padding-top: 2.7rem;
 
     .green & {
-        background: rgba(8, 224, 73, 0.75);
+        background: $primary-threequarter;
     }
 }
 

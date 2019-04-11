@@ -1,10 +1,12 @@
+@import "variables.scss";
+
 /* You can add global styles to this file, and also import other style files */
 
 html,
 body {
   height: 100%;
   padding-top: 1.5rem;
-  background: #343a40;
+  background: $background-main;
 }
 
 .container {
@@ -13,7 +15,6 @@ body {
 
 h1 {
   color: #fff;
-  // text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
   padding: 20px 0;
   margin-left: -10px;
   width: 100%;
@@ -25,38 +26,38 @@ h1 {
 }
 
 .text-green {
-  color: rgb(8, 224, 73);
+  color: $primary;
 
   &.glow,
   & > .glow {
-    text-shadow: 0 0 5px rgba(8, 224, 73, 0.5);
+    text-shadow: 0 0 5px $primary-half;
   }
 }
 
 .btn {
-  border-color: rgb(8, 224, 73) !important;
-  color: rgb(8, 224, 73) !important;
-  background: #343a40 !important;
+  border-color: $primary !important;
+  color: $primary !important;
+  background: $background-main !important;
   &:hover {
-    background: rgb(8, 224, 73) !important;
-    color: #343a40 !important;
+    background: $primary !important;
+    color: $background-main !important;
   }
 
   &.btn-primary {
-    color: #343a40 !important;
-    background: rgb(8, 224, 73) !important;
+    color: $background-main !important;
+    background: $primary !important;
     &:hover {
-      box-shadow: 0 0 5px rgba(8, 224, 73, 0.75);
+      box-shadow: 0 0 5px $primary-threequarter;
     }
   }
 
   &.btn-danger {
-    border-color: rgb(224, 14, 88) !important;
-    color: rgb(224, 14, 88) !important;
-    background: #343a40 !important;
+    border-color: $danger !important;
+    color: $danger !important;
+    background: $background-main !important;
     &:hover {
-      background: rgb(224, 14, 88) !important;
-      color: #343a40 !important;
+      background: $danger !important;
+      color: $background-main !important;
     }
   }
 }
@@ -73,7 +74,7 @@ a {
 
 
 .modal-content {
-  background-color: #343a40 !important;
+  background-color: $background-main !important;
   color: #fff !important;
 }
 
