@@ -90,6 +90,37 @@ class BackendsService {
         })
     }
 
+    create(backendName, onChunkCallback) {
+        return this.DockerApiClient.pullImage(backendName, onChunkCallback)
+        .then(() => {
+            return this.DockerApiClient.createContainer(backendName)
+        })
+        .then(() => {
+            return this.DockerApiClient.startContainer(backendName)
+        })
+        .then((result) => {
+            console.log('result', result)
+            return true
+        })
+        // .then((res) => {
+        //     if (res.statusCode == 404) {
+        //         return null
+        //     }
+        //     if (res.statusCode >= 500) {
+        //         throw new Error({
+        //             message: `An error occurred`,
+        //             response: res
+        //         })
+        //     }
+
+        //     return this.get(backendName)
+            
+        // }).catch((err) => {
+        //     console.log(`Error while starting backend ${backendName}:`, err)
+        //     throw err
+        // })
+    }
+
     remove(backendName) {
 
         var backendConfig = this.BackendConfigurationService.getBackendConfiguration(backendName)

@@ -87,5 +87,19 @@ Configuration('BackendsRoutes', (BackendsService) => {
     })
   })
 
+  router.post('/:name', (request, response) => {
+    const name = request.params.name
+    BackendsService.create(name, (data) => {
+      console.log(data)
+    }).then(() => {
+      response.status(204).send()
+    }).catch((err) => {
+      response.status(500).send({
+        message: `An error occurred`,
+        error: err
+      })
+    })
+  })
+
   return router
 })
